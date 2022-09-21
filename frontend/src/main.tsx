@@ -5,5 +5,9 @@ import './root.css';
 const rootNode = document.getElementById('app');
 
 if (rootNode) {
-  createRoot(rootNode).render(<App />);
+  createRoot(rootNode).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }
