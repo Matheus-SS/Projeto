@@ -7,7 +7,7 @@ export const Grid = styled.div`
   height: 100%;
 
   display: grid;
-  grid-template-columns: 100px 500px auto;
+  grid-template-columns: 100px 400px auto;
   gap: 10px;
 `;
 
@@ -52,5 +52,54 @@ export const ProfileContainer = styled.div`
     height: 100%;
     width: 100%;
     border-radius: 50%;
+  }
+`;
+
+export const ContainerMessage = styled.div`
+  margin: 20px 20px 0px;
+`;
+
+export const MenuMessage = styled.div`
+  position: relative;
+  margin-top: 20px;
+
+  ul {
+    list-style: none;
+    background-color: ${color.background.secondary};
+    border-radius: 30px;
+
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    li {
+      text-align: center;
+      text-decoration: none;
+      z-index: 1;
+      width: 100px;
+      padding: 10px 0;
+      cursor: pointer;
+    }
+    .indicator {
+      position: absolute;
+      background-color: ${color.background.primary};
+      height: 30px;
+      width: 120px;
+      border-radius: 20px;
+      transition: 0.5s;
+    }
+
+    li:nth-child(1).active ~ .indicator {
+      transform: translateX(-115px);
+    }
+
+    li:nth-child(2).active ~ .indicator {
+      transform: translateX(0);
+    }
+
+    li:nth-child(3).active ~ .indicator {
+      transform: translateX(115px);
+    }
   }
 `;
