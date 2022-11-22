@@ -17,11 +17,11 @@ export class UserEntity {
 
   public static createUser(userProps: UserType): Result<UserEntity> {
     if (userProps.username.length < 4) {
-      return Result.fail('User must be at least 4 characters');
+      return Result.fail('User must contain at least 4 characters');
     }
 
     if (userProps.password.length < 6) {
-      return Result.fail('User must be at least 6 characters');
+      return Result.fail('Password must contain at least 6 characters');
     }
 
     if (this.hasWhiteSpace(userProps.password)) {

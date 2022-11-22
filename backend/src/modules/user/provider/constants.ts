@@ -1,0 +1,2 @@
+export const PASSWORD_HASH_PROVIDER = 'PASSWORD_HASH_PROVIDER';
+export const SALT_ROUNDS = 10;

@@ -21,7 +21,7 @@ test('Deve dar erro ao tentar criar usuario com username com menos de 4 letras',
   });
 
   expect(user.failure).toBe(true);
-  expect(user.error).toBe('User must be at least 4 characters');
+  expect(user.error).toBe('User must contain at least 4 characters');
 });
 
 test('Deve dar erro ao tentar criar usuario com senha com menos de 6 letras', () => {
@@ -33,7 +33,7 @@ test('Deve dar erro ao tentar criar usuario com senha com menos de 6 letras', ()
   });
 
   expect(user.failure).toBe(true);
-  expect(user.error).toBe('User must be at least 6 characters');
+  expect(user.error).toBe('Password must contain at least 6 characters');
 });
 
 test('Deve dar erro ao tentar criar usuario com email inválido', () => {

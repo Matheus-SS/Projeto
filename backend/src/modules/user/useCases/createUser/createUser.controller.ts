@@ -1,4 +1,4 @@
-import { Controller, Inject, Post, Res } from '@nestjs/common';
+import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
 import { AppError } from 'src/shared/core/appError';
 import { BaseController } from '../../../../shared/http/baseController';
 import { CREATE_USER_PROVIDER } from '../../../../constants';
@@ -6,7 +6,7 @@ import { CreateUserError } from './createUserError';
 import { InterfaceUseCase } from '../../../../shared/core/useCase.interface';
 import { CreateUserDTO } from './createUserDTO';
 import { CreateUserUseCaseResponse } from './createUserUseCaseResponse';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('api/v1/user')
 export class CreateUserController extends BaseController {
@@ -21,15 +21,13 @@ export class CreateUserController extends BaseController {
   }
 
   @Post('/create')
-  async executeImpl(@Res() response): Promise<Response> {
-    const user = {
-      username: 'sinn',
-      email: 'string12@gmail.com',
-      password: 'string',
-    };
-
+  async executeImpl(
+    @Req() request: Request,
+    @Res() response: Response,
+  ): Promise<Response> {
+    const body: CreateUserDTO = request.body as CreateUserDTO;
     try {
-      const result = await this.createUser.execute(user);
+      const result = await this.createUser.execute(body);
 
       if (result.isLeft()) {
         const error = result.value;
