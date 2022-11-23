@@ -1,62 +1,31 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import {
   Container,
-  ContainerMessage,
   Grid,
   IconList,
   IconListContainer,
   IconListItem,
-  MenuMessage,
   ProfileContainer,
+  FormSearchBar,
+  ContainerSearchBar,
+  InputSearchBar,
+  Wrapper,
 } from './styles';
 
-import { color, size } from './constants';
+import { color } from './constants';
 import { Text } from './components/Text';
 import {
   INITIAL_STATE,
   navBarReducer,
   NavItemsType,
   NavBarActionType,
-} from './navbarReducer';
+} from './reducer/navbarReducer';
 
 import axios from 'axios';
-type RequestType = {
-  name: {
-    first: string;
-    last: string;
-  };
-  picture: {
-    medium: string;
-  };
-};
-type ConversationType = {
-  name: string;
-  image: string;
-};
-type MenuItemsType = {
-  id: number;
-  text: string;
-  active: boolean;
-};
 
-const INITIAL_STATE_MENU = [
-  {
-    id: 1,
-    text: 'All chats',
-    active: true,
-  },
-  {
-    id: 2,
-    text: 'Groups',
-    active: false,
-  },
-  {
-    id: 3,
-    text: 'Contacts',
-    active: false,
-  },
-];
-
+type SearchBarProps = {
+  onSubmit(text: string): void;
+};
 export const App: React.FC = () => {
   function sidebar() {
     const [state, dispatch] = React.useReducer(navBarReducer, INITIAL_STATE);
@@ -98,84 +67,43 @@ export const App: React.FC = () => {
     );
   }
 
-  function main() {
-    const [menuMessage, setMenuMessage] =
-      React.useState<MenuItemsType[]>(INITIAL_STATE_MENU);
-    const [conversation, setConversation] = React.useState<ConversationType[]>(
-      []
-    );
+  function SearchBar(props: SearchBarProps) {
+    const [searchText, setSearchText] = React.useState<string>('');
 
-    const [loading, setLoading] = React.useState<Boolean>(false);
-
-    const handleClickMenuMessageItem = (id: number) => {
-      const newMenu = menuMessage.map((menuItem: MenuItemsType) => {
-        if (menuItem.id === id) {
-          return { ...menuItem, active: true };
-        }
-        return { ...menuItem, active: false };
-      });
-
-      setMenuMessage(newMenu);
+    const handleSubmit = (e: FormEvent) => {
+      e.preventDefault();
+      if (!searchText) return;
+      props.onSubmit(searchText);
     };
 
-    React.useEffect(() => {
-      async function fetchData() {
-        setLoading(true);
-        const { data } = await axios.get(
-          'https://randomuser.me/api/?results=5&nat=BR'
-        );
+    return (
+      <FormSearchBar onSubmit={handleSubmit}>
+        <div>
+          <InputSearchBar
+            type="search"
+            placeholder="digite o nome da pizza"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
+      </FormSearchBar>
+    );
+  }
 
-        const mappedConversation = data.results.map((result: RequestType) => ({
-          name: `${result.name.first} ${result.name.last}`,
-          image: result.picture.medium,
-        }));
-
-        setConversation(mappedConversation);
-        setLoading(false);
-      }
-      fetchData();
-    }, []);
-
+  function main() {
+    const handleSubmitSearch = (text: string) => {
+      console.log('valor do input', text);
+    };
     return (
       <Container>
-        <ContainerMessage>
-          <Text size={size.font.large} weight="bold">
-            Messages
-          </Text>
-          <MenuMessage>
-            <ul>
-              {menuMessage.map((message: MenuItemsType) => (
-                <li
-                  onClick={() => handleClickMenuMessageItem(message.id)}
-                  className={message.active ? 'active' : ''}
-                  key={message.id}
-                >
-                  <Text
-                    size={size.font.small}
-                    color={
-                      message.active
-                        ? color.fonts.active
-                        : color.fonts.secondary
-                    }
-                    weight={message.active ? 'bold' : 'regular'}
-                  >
-                    {message.text}
-                  </Text>
-                </li>
-              ))}
-              <div className="indicator" />
-            </ul>
-          </MenuMessage>
-
-          <ul>
-            <li>
-              {/* <ProfileContainer>
-                <img src="https://i.pravatar.cc/150?img=27" />
-              </ProfileContainer>
-              <Text></Text> */}
-            </li>
-          </ul>
-        </ContainerMessage>
+        <Wrapper>
+          <ContainerSearchBar>
+            <SearchBar onSubmit={handleSubmitSearch}></SearchBar>
+          </ContainerSearchBar>
+          <main>
+            <h3>Escolha sua pizza</h3>
+          </main>
+        </Wrapper>
       </Container>
     );
   }
@@ -187,7 +115,6 @@ export const App: React.FC = () => {
     <Grid>
       {sidebar()}
       {main()}
-      {chat()}
     </Grid>
   );
 };

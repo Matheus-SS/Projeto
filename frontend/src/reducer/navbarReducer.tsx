@@ -7,7 +7,7 @@ import {
   HiOutlineShare,
   HiOutlineCog,
 } from 'react-icons/hi';
-import { color, size } from './constants';
+import { color, size } from '../constants';
 
 export type NavItemsType = {
   id: number;

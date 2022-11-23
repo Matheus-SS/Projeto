@@ -7,7 +7,7 @@ export const Grid = styled.div`
   height: 100%;
 
   display: grid;
-  grid-template-columns: 100px 400px auto;
+  grid-template-columns: 100px auto;
   gap: 10px;
 `;
 
@@ -55,51 +55,26 @@ export const ProfileContainer = styled.div`
   }
 `;
 
-export const ContainerMessage = styled.div`
-  margin: 20px 20px 0px;
+// SEARCH BAR
+export const FormSearchBar = styled.form`
+  div {
+    width: 200px;
+  }
 `;
 
-export const MenuMessage = styled.div`
-  position: relative;
-  margin-top: 20px;
+export const InputSearchBar = styled.input`
+  padding: 10px;
+  border: 1px solid ${color.background.secondary};
+  border-radius: 4px;
+  width: 100%;
+  outline-color: ${color.fonts.active};
+`;
 
-  ul {
-    list-style: none;
-    background-color: ${color.background.secondary};
-    border-radius: 30px;
+// MAIN
+export const ContainerSearchBar = styled.div`
+  margin: 20px 0;
+`;
 
-    position: relative;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-
-    li {
-      text-align: center;
-      text-decoration: none;
-      z-index: 1;
-      width: 100px;
-      padding: 10px 0;
-      cursor: pointer;
-    }
-    .indicator {
-      position: absolute;
-      background-color: ${color.background.primary};
-      height: 30px;
-      width: 120px;
-      border-radius: 20px;
-      transition: 0.5s;
-    }
-
-    li:nth-child(1).active ~ .indicator {
-      transform: translateX(-115px);
-    }
-
-    li:nth-child(2).active ~ .indicator {
-      transform: translateX(0);
-    }
-
-    li:nth-child(3).active ~ .indicator {
-      transform: translateX(115px);
-    }
-  }
+export const Wrapper = styled.div`
+  margin-left: 20px;
 `;
