@@ -1,5 +1,4 @@
-import { AppError } from 'src/shared/core/appError';
-import { Either, left, Result, right } from '../../../shared/core/Result';
+import { Result } from '../../../shared/core/Result';
 
 export type UserType = {
   id?: number;
