@@ -7,6 +7,9 @@ export const color = {
   background: {
     primary: '#fff',
     secondary: '#e7e3e3',
+    button: {
+      primary: '#4593f3',
+    },
   },
 };
 

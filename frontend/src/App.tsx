@@ -11,6 +11,10 @@ import {
   InputSearchBar,
   Wrapper,
   ContainerProduct,
+  ContainerCart,
+  ContainerCartTitle,
+  ContainerOrder,
+  BillOrder,
 } from './styles';
 import { color } from './constants';
 import { Text } from './components/Text';
@@ -21,6 +25,7 @@ import {
   NavBarActionType,
 } from './reducer/navbarReducer';
 
+import { HiTrash } from 'react-icons/hi';
 import axios from 'axios';
 const arrayOfPizzas = [
   {
@@ -124,10 +129,104 @@ const arrayOfPizzas = [
     price: 99.99,
   },
 ];
+type CartType = {
+  id: number;
+  name: string;
+  quantity: number;
+  description: string;
+  imageUrl: string;
+  categoryId: number;
+  price: number;
+};
+const cart = [
+  // {
+  //   id: 15,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+  // {
+  //   id: 22,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+  // {
+  //   id: 28,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+  // {
+  //   id: 10,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+  // {
+  //   id: 5,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+  // {
+  //   id: 1,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+  // {
+  //   id: 9,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+  // {
+  //   id: 3,
+  //   name: 'Pizza Doce',
+  //   quantity: 20,
+  //   description: 'Pizza feita com morango',
+  //   imageUrl:
+  //     'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
+  //   categoryId: 1,
+  //   price: 99.99,
+  // },
+];
+
 type SearchBarProps = {
   onSubmit(text: string): void;
 };
 export const App: React.FC = () => {
+  const [cartGlobal, setCartGlobal] = React.useState<CartType[]>([]);
+
   function sidebar() {
     const [state, dispatch] = React.useReducer(navBarReducer, INITIAL_STATE);
 
@@ -198,6 +297,7 @@ export const App: React.FC = () => {
 
     const handleAddToCart = (value: any) => {
       console.log('value', value);
+      setCartGlobal((prevState) => [...prevState, value]);
     };
     return (
       <Container>
@@ -236,13 +336,105 @@ export const App: React.FC = () => {
     );
   }
 
-  function chat() {
-    return <h1>Chat</h1>;
+  function Cart() {
+    const handleIncrementCart = (id: number) => {
+      setCartGlobal((prevState) => {
+        return prevState.map((product) => {
+          if (product.id === id) {
+            return { ...product, quantity: product.quantity + 1 };
+          } else return product;
+        });
+      });
+    };
+
+    const handleDecrementCart = (id: number) => {
+      setCartGlobal((prevState) => {
+        return prevState
+          .map((product) => {
+            if (product.id === id) {
+              return { ...product, quantity: product.quantity - 1 };
+            } else return product;
+          })
+          .filter((product) => {
+            return product.quantity !== 0;
+          });
+      });
+    };
+
+    const CalculateTotalCart = () => {
+      return cartGlobal.reduce((accumulator, product) => {
+        accumulator += product.price * product.quantity;
+        return accumulator;
+      }, 0);
+    };
+    return (
+      <Container>
+        <section>
+          <ContainerCart>
+            <Wrapper>
+              <ContainerCartTitle>
+                <Text>Carrinho</Text>
+              </ContainerCartTitle>
+
+              <ContainerOrder>
+                <ul>
+                  {cartGlobal.map((order) => (
+                    <li key={order.id}>
+                      <div className="card-order">
+                        <img
+                          src={order.imageUrl}
+                          alt={order.name}
+                          className="card-order-image"
+                        />
+                        <div className="card-order-body">
+                          <p>{order.name}</p>
+                          <p>{order.price}</p>
+                          <div className="card-order-body-quantity">
+                            <span>
+                              <button
+                                className="card-order-body-quantity-btn-minus"
+                                onClick={() => handleDecrementCart(order.id)}
+                              >
+                                -
+                              </button>
+                              {order.quantity}
+                              <button
+                                className="card-order-body-quantity-btn-plus"
+                                onClick={() => handleIncrementCart(order.id)}
+                              >
+                                +
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+                        <div className="card-order-option">
+                          <button>
+                            <HiTrash size={20} />
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </ContainerOrder>
+              <BillOrder>
+                <span>
+                  <p>Total</p>
+                  <p>R${CalculateTotalCart()}</p>
+                </span>
+                <button>IR PARA PAGAMENTO</button>
+              </BillOrder>
+            </Wrapper>
+          </ContainerCart>
+        </section>
+      </Container>
+    );
   }
   return (
-    <Grid>
+    <Grid fullCart={!!cartGlobal.length}>
       {sidebar()}
       {main()}
+      {Cart()}
     </Grid>
   );
 };
