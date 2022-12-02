@@ -8,7 +8,7 @@ import { CreateUserDTO } from './createUserDTO';
 import { CreateUserUseCaseResponse } from './createUserUseCaseResponse';
 import { Request, Response } from 'express';
 
-@Controller('api/v1/user')
+@Controller('user')
 export class CreateUserController extends BaseController {
   constructor(
     @Inject(CREATE_USER_PROVIDER)
