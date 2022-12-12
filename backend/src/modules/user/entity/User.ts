@@ -1,6 +1,16 @@
 import { Result } from '../../../shared/core/Result';
+import { Email } from './Email';
+import { Password } from './Password';
+import { Username } from './Username';
 
 export type UserType = {
+  id?: number;
+  username: Username;
+  email: Email;
+  password: Password;
+};
+
+export type UserDataType = {
   id?: number;
   username: string;
   email: string;
@@ -14,63 +24,48 @@ export class UserEntity {
     this.props = userProps;
   }
 
-  public static createUser(userProps: UserType): Result<UserEntity> {
-    if (userProps.username.length < 4) {
-      return Result.fail('User must contain at least 4 characters');
+  public static createUser(userProps: UserDataType): Result<UserEntity> {
+    const usernameOrFail = Username.create(userProps.username);
+    const passwordOrFail = Password.create(userProps.password);
+    const emailOrFail = Email.create(userProps.email);
+    if (usernameOrFail.failure) {
+      return Result.fail(usernameOrFail.error.toString());
     }
 
-    if (userProps.password.length < 6) {
-      return Result.fail('Password must contain at least 6 characters');
+    if (passwordOrFail.failure) {
+      return Result.fail(passwordOrFail.error.toString());
     }
 
-    if (this.hasWhiteSpace(userProps.password)) {
-      return Result.fail('Password cannot have whitespace');
-    }
-
-    if (!this.isValidEmail(userProps.email)) {
-      return Result.fail('Invalid email');
+    if (emailOrFail.failure) {
+      return Result.fail(emailOrFail.error.toString());
     }
 
     return Result.ok<UserEntity>(
       new UserEntity({
-        email: userProps.email.toLowerCase().trim(),
-        password: userProps.password,
-        username: userProps.username.trim(),
+        email: emailOrFail.getValue(),
+        password: passwordOrFail.getValue(),
+        username: usernameOrFail.getValue(),
       }),
     );
   }
 
-  get getProps(): UserType {
-    return this.props;
+  get getProps(): UserDataType {
+    return {
+      username: this.getUsername.getValue,
+      email: this.getEmail.getValue,
+      password: this.getPassword.getValue,
+    };
   }
 
-  get getUsername(): string {
+  get getUsername(): Username {
     return this.props.username;
   }
 
-  get getEmail(): string {
+  get getEmail(): Email {
     return this.props.email;
   }
 
-  get getPassword(): string {
+  get getPassword(): Password {
     return this.props.password;
-  }
-
-  set setPassword(value: string) {
-    this.props.password = value;
-  }
-
-  private static hasWhiteSpace(value: string): boolean {
-    const regex = new RegExp(/\s/g);
-
-    return regex.test(value);
-  }
-
-  private static isValidEmail(value: string): boolean {
-    const emailRegex = new RegExp(
-      /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/,
-    );
-
-    return emailRegex.test(value);
   }
 }

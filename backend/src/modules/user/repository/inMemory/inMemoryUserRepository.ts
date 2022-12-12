@@ -15,7 +15,7 @@ export class InMemoryUserRepository implements InterfaceUserRepository {
   }
 
   public async findByEmail(email: string): Promise<UserEntity> {
-    const user = this.item.find((user) => user.getEmail === email);
+    const user = this.item.find((user) => user.getEmail.getValue === email);
 
     return user;
   }

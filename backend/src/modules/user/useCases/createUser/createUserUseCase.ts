@@ -31,12 +31,12 @@ export class CreateUserUseCase
     }
 
     const hashedPassword = await this.passwordHashProvider.generateHash(
-      userOrFail.getValue().getPassword,
+      userOrFail.getValue().getPassword.getValue,
     );
 
-    userOrFail.getValue().setPassword = hashedPassword;
+    userOrFail.getValue().getPassword.setPassword = hashedPassword;
 
-    const email = userOrFail.getValue().getEmail;
+    const email = userOrFail.getValue().getEmail.getValue;
 
     const emailExists = await this.userRepository.findByEmail(email);
 
