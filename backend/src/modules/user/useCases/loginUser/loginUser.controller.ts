@@ -42,8 +42,9 @@ export class LoginUserController extends BaseController {
             return this.internalError(response, error.message);
         }
       } else {
-        (request.session as any).authenticate = true;
-        console.log(request.session);
+        request.session.user = {
+          email: body.email,
+        };
         return this.ok(response, result.value);
       }
     } catch (error) {
