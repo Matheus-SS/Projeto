@@ -4,16 +4,16 @@ import { ClusterService } from './cluster.service';
 import * as session from 'express-session';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('/api/v1')
+  app.setGlobalPrefix('/api/v1');
   app.use(
     session({
       secret: 'my-secret',
       resave: false,
       saveUninitialized: false,
-      name:'PROJETO_SESSION_ID',
+      name: 'PROJETO_SESSION_ID',
       cookie: {
-        maxAge: 30000
-      }
+        maxAge: 3000,
+      },
     }),
   );
   await app.listen(3000);

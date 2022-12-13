@@ -8,8 +8,8 @@ export class BcryptHashPassword implements InterfacePasswordHash {
   }
   async comparePassword(
     password: string,
-    passswordToCompare: string,
+    passswordToCompareHash: string,
   ): Promise<boolean> {
-    return await bcrypt.compare(password, passswordToCompare);
+    return await bcrypt.compare(password, passswordToCompareHash);
   }
 }

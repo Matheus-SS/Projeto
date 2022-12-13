@@ -26,6 +26,7 @@ export class CreateUserController extends BaseController {
     @Res() response: Response,
   ): Promise<Response> {
     const body: CreateUserDTO = request.body as CreateUserDTO;
+    console.log(request.session);
     try {
       const result = await this.createUser.execute(body);
 

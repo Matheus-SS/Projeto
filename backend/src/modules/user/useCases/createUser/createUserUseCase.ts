@@ -34,7 +34,7 @@ export class CreateUserUseCase
       userOrFail.getValue().getPassword.getValue,
     );
 
-    userOrFail.getValue().getPassword.setPassword = hashedPassword;
+    userOrFail.getValue().setPassword = hashedPassword;
 
     const email = userOrFail.getValue().getEmail.getValue;
 

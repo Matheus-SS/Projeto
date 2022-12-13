@@ -68,4 +68,8 @@ export class UserEntity {
   get getPassword(): Password {
     return this.props.password;
   }
+
+  set setPassword(value: string) {
+    this.props.password.setPassword = value;
+  }
 }
