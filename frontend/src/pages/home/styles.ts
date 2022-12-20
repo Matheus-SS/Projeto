@@ -1,9 +1,16 @@
 import styled from 'styled-components';
-import { color, size } from './constants';
+import { color, size } from '../../constants';
 
 type GridProps = {
   fullCart?: boolean;
 };
+export const Container = styled.div`
+  flex-direction: column;
+  display: flex;
+  background-color: ${color.background.primary};
+  overflow-x: auto;
+`;
+
 export const Grid = styled.div<GridProps>`
   background-color: ${color.background.secondary};
   color: ${color.fonts.primary};
