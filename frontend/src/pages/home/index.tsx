@@ -1,12 +1,8 @@
 import React from 'react';
-import {
-  Container,
-  ContainerSearchBar,
-  Wrapper,
-  ContainerProduct,
-} from './styles';
+import { ContainerSearchBar, Wrapper, ContainerProduct } from './styles';
 import { Text } from '../../components/text';
 import { SearchBar } from '../../components/searchBar';
+import { Container } from '../../shared-styles';
 const arrayOfPizzas = [
   {
     id: 1,

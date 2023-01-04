@@ -1,20 +1,6 @@
 import styled from 'styled-components';
 import { color, size } from '../../constants';
 
-export const Container = styled.div`
-  flex-direction: column;
-  display: flex;
-  background-color: ${color.background.primary};
-  overflow-x: auto;
-`;
-
-export const Wrapper = styled.div`
-  margin: 0 20px;
-  flex-direction: column;
-  display: flex;
-  background-color: ${color.background.primary};
-`;
-
 export const ContainerCart = styled.div`
   margin-top: 20px;
 `;

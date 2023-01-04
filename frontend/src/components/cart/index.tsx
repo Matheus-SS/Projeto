@@ -1,14 +1,13 @@
 import React from 'react';
 import { Text } from '../text';
 import {
-  Container,
-  Wrapper,
   ContainerCart,
   ContainerCartTitle,
   ContainerOrder,
   BillOrder,
 } from './styles';
 import { HiTrash } from 'react-icons/hi';
+import { Container, Wrapper } from '../../shared-styles';
 type CartType = {
   id: number;
   name: string;

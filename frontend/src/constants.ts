@@ -25,3 +25,10 @@ export const size = {
     large: 18,
   },
 };
+
+export const routes = {
+  HOME: '/',
+  LOGIN: '/login',
+  SIGNUP: '/signup',
+  PROFILE: '/profile',
+};

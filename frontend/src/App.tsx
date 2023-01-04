@@ -2,10 +2,12 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { Cart } from './components/cart';
 import { Sidebar } from './components/sidebar';
+import { routes } from './constants';
 import { Home } from './pages/home';
 import { Login } from './pages/login';
 import { Profile } from './pages/profile';
-import { Grid } from './styles';
+import { Signup } from './pages/signup';
+import { Grid } from './shared-styles';
 
 const AppLayout = () => {
   return (
@@ -20,18 +22,22 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       {
-        path: '/',
+        path: routes.HOME,
         element: <Home />,
       },
       {
-        path: '/profile',
+        path: routes.PROFILE,
         element: <Profile />,
       },
     ],
   },
   {
-    path: '/login',
+    path: routes.LOGIN,
     element: <Login />,
+  },
+  {
+    path: routes.SIGNUP,
+    element: <Signup />,
   },
 ]);
 export const App: React.FC = () => {

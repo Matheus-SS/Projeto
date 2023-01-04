@@ -1,39 +1,54 @@
 import React, { FormEvent } from 'react';
-import axios from 'axios';
 import { Container } from '../../shared-styles';
 import { ContainerForm } from './styles';
 import { Input } from '../../components/input';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../components/button';
 import { routes } from '../../constants';
+import { api } from '../../services/api';
 
-export const Login: React.FC = () => {
+type Response = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+export const Signup: React.FC = () => {
   const [authGlobal, setAuthGlobal] = React.useState(false);
-  const [login, setLogin] = React.useState({
+  const [form, setForm] = React.useState({
+    username: '',
     email: '',
     password: '',
   });
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setLogin((prevState) => ({
+    setForm((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   }
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const response = await axios.post(
-      'http://localhost:3000/api/v1/user/login',
-      login,
-      { withCredentials: true }
-    );
-    setAuthGlobal(true);
+    try {
+      const response = await api.post<Response, Response>('/user/create', form);
+      console.log();
+    } catch (error) {
+      console.log('catch', error);
+    }
   }
 
   return (
     <Container>
       <ContainerForm>
         <form onSubmit={handleSubmit}>
-          <h2>Login</h2>
+          <h2>Cadastre-se</h2>
+          <label htmlFor="username">Username</label>
+          <Input
+            id="username"
+            type="text"
+            placeholder="nome de usuario"
+            name="username"
+            onChange={handleChange}
+          />
           <label htmlFor="email">Email</label>
           <Input
             id="email"
@@ -54,10 +69,10 @@ export const Login: React.FC = () => {
             onClick={handleSubmit}
             containerStyles={{ marginTop: '10px' }}
           >
-            Entrar
+            Cadastrar
           </Button>
           <div className="form-container-signup-link">
-            <NavLink to={routes.SIGNUP}>cadastre-se</NavLink>
+            <NavLink to={routes.LOGIN}>voltar para login</NavLink>
           </div>
         </form>
       </ContainerForm>

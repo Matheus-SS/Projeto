@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-  Container,
   IconList,
   IconListContainer,
   IconListItem,
   ProfileContainer,
 } from './styles';
+import { Container } from '../../shared-styles';
+
 import { NavLink } from 'react-router-dom';
 import { color } from '../../constants';
 import { NavItemsType, NAVBAR_DATA } from './data';

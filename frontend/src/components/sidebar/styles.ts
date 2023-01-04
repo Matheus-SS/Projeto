@@ -1,12 +1,5 @@
 import styled from 'styled-components';
-import { color, size } from '../../constants';
-
-export const Container = styled.div`
-  flex-direction: column;
-  display: flex;
-  background-color: ${color.background.primary};
-  overflow-x: auto;
-`;
+import { color } from '../../constants';
 
 export const IconListContainer = styled.nav`
   display: flex;
