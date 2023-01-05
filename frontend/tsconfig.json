@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "umd",
+    "module": "ESNext",
     "lib": [
       "ESNext",
       "dom"

@@ -5,13 +5,20 @@ import { Input } from '../../components/input';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../components/button';
 import { routes } from '../../constants';
-import { api } from '../../services/api';
+import { api, postService } from '../../services/api';
+import { useMutation } from '@tanstack/react-query';
 
 type Response = {
   username: string;
   email: string;
   password: string;
 };
+type Result<Ok, Err> =
+  | {
+      result: 'ok';
+      data: Ok;
+    }
+  | { result: 'err'; data: Err };
 
 export const Signup: React.FC = () => {
   const [authGlobal, setAuthGlobal] = React.useState(false);
@@ -20,20 +27,26 @@ export const Signup: React.FC = () => {
     email: '',
     password: '',
   });
+  const [err, setErr] = React.useState('');
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   }
+
+  const { data, error, mutate } = useMutation({
+    mutationFn: (data: Response) => {
+      return createUser(data);
+    },
+    onError: (error: any) => {
+      setErr(error.response.data.message);
+    },
+  });
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    try {
-      const response = await api.post<Response, Response>('/user/create', form);
-      console.log();
-    } catch (error) {
-      console.log('catch', error);
-    }
+    mutate(form);
   }
 
   return (

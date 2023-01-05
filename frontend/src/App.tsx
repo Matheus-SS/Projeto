@@ -8,6 +8,10 @@ import { Login } from './pages/login';
 import { Profile } from './pages/profile';
 import { Signup } from './pages/signup';
 import { Grid } from './shared-styles';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient();
 
 const AppLayout = () => {
   return (
@@ -41,7 +45,12 @@ const router = createBrowserRouter([
   },
 ]);
 export const App: React.FC = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={true} />
+    </QueryClientProvider>
+  );
 };
 
 {
