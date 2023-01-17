@@ -26,7 +26,7 @@ export const size = {
   },
 };
 
-export const routes = {
+export const path = {
   HOME: '/',
   LOGIN: '/login',
   SIGNUP: '/signup',

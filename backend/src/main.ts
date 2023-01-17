@@ -9,7 +9,12 @@ const RedisStore = connectRedis(session);
 
 const redisClient = new IoRedis('redis://localhost:6379');
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      credentials: true,
+      origin: 'http://127.0.0.1:8080',
+    },
+  });
   app.setGlobalPrefix('/api/v1');
   app.use(
     session({

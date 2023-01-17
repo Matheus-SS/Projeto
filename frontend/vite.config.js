@@ -3,11 +3,10 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 import svgrPlugin from 'vite-plugin-svgr'
 
 export default defineConfig({
-
   build: {
     outDir: 'dist',
   },
-  plugins: [
+  plugins: [ 
     reactRefresh(),
     svgrPlugin({
       svgrOptions: {

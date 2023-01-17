@@ -5,7 +5,7 @@ import { ContainerForm } from './styles';
 import { Input } from '../../components/input';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../components/button';
-import { routes } from '../../constants';
+import { path } from '../../constants';
 
 export const Login: React.FC = () => {
   const [authGlobal, setAuthGlobal] = React.useState(false);
@@ -57,7 +57,7 @@ export const Login: React.FC = () => {
             Entrar
           </Button>
           <div className="form-container-signup-link">
-            <NavLink to={routes.SIGNUP}>cadastre-se</NavLink>
+            <NavLink to={path.SIGNUP}>cadastre-se</NavLink>
           </div>
         </form>
       </ContainerForm>

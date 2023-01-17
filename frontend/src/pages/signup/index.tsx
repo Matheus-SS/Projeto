@@ -4,22 +4,29 @@ import { ContainerForm } from './styles';
 import { Input } from '../../components/input';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../../components/button';
-import { routes } from '../../constants';
-import { api, postService } from '../../services/api';
+import { path } from '../../constants';
 import { useMutation } from '@tanstack/react-query';
+import { createUser } from '../../services/user';
+import { z, ZodIssue } from 'zod';
+
+type Request = {
+  username: string;
+  email: string;
+  password: string;
+};
 
 type Response = {
   username: string;
   email: string;
   password: string;
 };
-type Result<Ok, Err> =
-  | {
-      result: 'ok';
-      data: Ok;
-    }
-  | { result: 'err'; data: Err };
-
+const getError = (path: string, errors: ZodIssue[]) => {
+  const error = errors.find((error) => error.path[0] === path);
+  console.log(error);
+  return error ? (
+    <small className="text-red-500">{error?.message}</small>
+  ) : null;
+};
 export const Signup: React.FC = () => {
   const [authGlobal, setAuthGlobal] = React.useState(false);
   const [form, setForm] = React.useState({
@@ -27,7 +34,9 @@ export const Signup: React.FC = () => {
     email: '',
     password: '',
   });
-  const [err, setErr] = React.useState('');
+
+  const [errors, setErrors] = React.useState<ZodIssue[]>([]);
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm((prevState) => ({
       ...prevState,
@@ -35,18 +44,42 @@ export const Signup: React.FC = () => {
     }));
   }
 
-  const { data, error, mutate } = useMutation({
-    mutationFn: (data: Response) => {
-      return createUser(data);
+  const { data, mutate } = useMutation({
+    mutationFn: (data: Request) => {
+      return createUser<Request, Response>(data);
     },
     onError: (error: any) => {
-      setErr(error.response.data.message);
+      console.log(error.response.data.message);
     },
+  });
+
+  const FormSchema = z.object({
+    username: z
+      .string()
+      .min(4, {
+        message: 'Nome de usuário pelo menos 4 caracteres',
+      })
+      .max(10, 'Nome de usuário pelo menos 15 caracteres')
+      .trim(),
+    email: z.string().email({
+      message: 'Email obrigatório',
+    }),
+    password: z.string().min(6, {
+      message: 'Senha deve ter pelo menos 6 caracteres',
+    }),
   });
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    mutate(form);
+    const results = FormSchema.safeParse(form);
+
+    if (!results.success) {
+      const { issues } = results.error;
+      setErrors(issues);
+      console.log(issues);
+    } else {
+      mutate(form);
+    }
   }
 
   return (
@@ -62,6 +95,7 @@ export const Signup: React.FC = () => {
             name="username"
             onChange={handleChange}
           />
+          {getError('username', errors)}
           <label htmlFor="email">Email</label>
           <Input
             id="email"
@@ -70,6 +104,8 @@ export const Signup: React.FC = () => {
             name="email"
             onChange={handleChange}
           />
+          {getError('email', errors)}
+
           <label htmlFor="password">Senha</label>
           <Input
             id="password"
@@ -85,7 +121,7 @@ export const Signup: React.FC = () => {
             Cadastrar
           </Button>
           <div className="form-container-signup-link">
-            <NavLink to={routes.LOGIN}>voltar para login</NavLink>
+            <NavLink to={path.LOGIN}>voltar para login</NavLink>
           </div>
         </form>
       </ContainerForm>

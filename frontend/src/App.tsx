@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { Cart } from './components/cart';
 import { Sidebar } from './components/sidebar';
-import { routes } from './constants';
+import { path } from './constants';
 import { Home } from './pages/home';
 import { Login } from './pages/login';
 import { Profile } from './pages/profile';
@@ -26,21 +26,21 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       {
-        path: routes.HOME,
+        path: path.HOME,
         element: <Home />,
       },
       {
-        path: routes.PROFILE,
+        path: path.PROFILE,
         element: <Profile />,
       },
     ],
   },
   {
-    path: routes.LOGIN,
+    path: path.LOGIN,
     element: <Login />,
   },
   {
-    path: routes.SIGNUP,
+    path: path.SIGNUP,
     element: <Signup />,
   },
 ]);
