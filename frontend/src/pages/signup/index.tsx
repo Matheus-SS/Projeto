@@ -8,6 +8,10 @@ import { path } from '../../constants';
 import { useMutation } from '@tanstack/react-query';
 import { createUser } from '../../services/user';
 import { z, ZodIssue } from 'zod';
+import { FormError } from '../../components/formError';
+import { Toaster } from 'react-hot-toast';
+import { toastError, toastSuccess } from '../../lib/toast';
+import { AxiosError } from 'axios';
 
 type Request = {
   username: string;
@@ -20,13 +24,11 @@ type Response = {
   email: string;
   password: string;
 };
-const getError = (path: string, errors: ZodIssue[]) => {
-  const error = errors.find((error) => error.path[0] === path);
-  console.log(error);
-  return error ? (
-    <small className="text-red-500">{error?.message}</small>
-  ) : null;
+
+type ErrorType = {
+  message: string;
 };
+
 export const Signup: React.FC = () => {
   const [authGlobal, setAuthGlobal] = React.useState(false);
   const [form, setForm] = React.useState({
@@ -44,12 +46,21 @@ export const Signup: React.FC = () => {
     }));
   }
 
-  const { data, mutate } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: (data: Request) => {
       return createUser<Request, Response>(data);
     },
-    onError: (error: any) => {
-      console.log(error.response.data.message);
+    onError: (error: AxiosError<ErrorType>) => {
+      toastError(error.response?.data.message || 'Erro ao criar usuário');
+    },
+    onSuccess: (_: Response) => {
+      setForm({
+        username: '',
+        email: '',
+        password: '',
+      });
+
+      toastSuccess('Usuário cadastrado com sucesso');
     },
   });
 
@@ -76,7 +87,9 @@ export const Signup: React.FC = () => {
     if (!results.success) {
       const { issues } = results.error;
       setErrors(issues);
-      console.log(issues);
+      setTimeout(() => {
+        setErrors([]);
+      }, 2000);
     } else {
       mutate(form);
     }
@@ -84,36 +97,41 @@ export const Signup: React.FC = () => {
 
   return (
     <Container>
+      <Toaster position="top-right" reverseOrder={false} />
       <ContainerForm>
         <form onSubmit={handleSubmit}>
           <h2>Cadastre-se</h2>
           <label htmlFor="username">Username</label>
           <Input
+            value={form.username}
             id="username"
             type="text"
             placeholder="nome de usuario"
             name="username"
             onChange={handleChange}
           />
-          {getError('username', errors)}
+          <FormError errors={errors} formField="username" />
           <label htmlFor="email">Email</label>
           <Input
+            value={form.email}
             id="email"
             type="email"
             placeholder="email"
             name="email"
             onChange={handleChange}
           />
-          {getError('email', errors)}
+          <FormError errors={errors} formField="email" />
 
           <label htmlFor="password">Senha</label>
           <Input
+            value={form.password}
             id="password"
             type="password"
             placeholder="senha"
             name="password"
             onChange={handleChange}
           />
+          <FormError errors={errors} formField="password" />
           <Button
             onClick={handleSubmit}
             containerStyles={{ marginTop: '10px' }}

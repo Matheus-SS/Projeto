@@ -1,15 +1,20 @@
 import React from 'react';
 import { ZodIssue } from 'zod';
-import { Text } from '../text/index';
 
 type TextErrorProps = {
   formField: string;
   errors: ZodIssue[];
+  containerStyles?: Record<string, any>;
 };
-export const FormError: React.FC<TextErrorProps> = ({ formField, errors }) => {
+export const FormError: React.FC<TextErrorProps> = ({
+  formField,
+  errors,
+  containerStyles = {},
+}) => {
   const error = errors.find((error) => error.path[0] === formField);
-  console.log(error);
   return error ? (
-    <strong>Nome de usuário pelo menos 4 caracteres</strong>
+    <span style={containerStyles}>
+      <strong style={{ color: 'red' }}>{error?.message}</strong>
+    </span>
   ) : null;
 };
