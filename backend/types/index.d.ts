@@ -2,6 +2,10 @@ import 'express-session';
 
 declare module 'express-session' {
   interface SessionData {
-    user: any;
+    user: {
+      email: string;
+      username: string;
+    };
+    authenticated: boolean;
   }
 }

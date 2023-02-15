@@ -1,9 +1,9 @@
-import { Controller, Inject, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Inject, Post, Req, Res } from '@nestjs/common';
 import { InterfaceUseCase } from '../../../../shared/core/useCase.interface';
 import { LOGIN_USER_PROVIDER } from '../../../../constants';
 import { BaseController } from '../../../../shared/http/baseController';
 import { LoginUserDTO } from './loginUserDTO';
-import { LoginUserUseCaseResponse } from './loginUserUserCaseResponse';
+import { LoginUserUseCaseResponse } from './loginUserUseCaseResponse';
 import { AppError } from 'src/shared/core/appError';
 import { Request, Response } from 'express';
 import { LoginUserError } from './loginUserError';
@@ -42,13 +42,25 @@ export class LoginUserController extends BaseController {
             return this.internalError(response, error.message);
         }
       } else {
-        request.session.user = {
+        const userData = {
           email: body.email,
+          username: result.value.username,
         };
-        return this.ok(response, result.value);
+        request.session.user = {
+          ...userData,
+        };
+        request.session.authenticated = true;
+
+        return this.ok(response, userData);
       }
     } catch (error) {
       return this.internalError(response, error.message);
     }
+  }
+
+  @Get('/list')
+  async list(@Req() request: Request, @Res() response: Response) {
+    console.log(request.session);
+    return this.ok(response, 'lista');
   }
 }

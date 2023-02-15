@@ -12,7 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
       credentials: true,
-      origin: 'http://127.0.0.1:8080',
+      origin: 'http://localhost:8080',
     },
   });
   app.setGlobalPrefix('/api/v1');
@@ -24,7 +24,7 @@ async function bootstrap() {
       saveUninitialized: false,
       name: 'PROJETO_SESSION_ID',
       cookie: {
-        maxAge: 3600000,
+        maxAge: 60000,
       },
     }),
   );

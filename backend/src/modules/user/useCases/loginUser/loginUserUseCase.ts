@@ -10,7 +10,7 @@ import { USER_REPOSITORY_PROVIDER } from '../../repository/constants';
 import { InterfaceUserRepository } from '../../repository/userRepository.interface';
 import { LoginUserDTO } from './loginUserDTO';
 import { LoginUserError } from './loginUserError';
-import { LoginUserUseCaseResponse } from './loginUserUserCaseResponse';
+import { LoginUserUseCaseResponse } from './loginUserUseCaseResponse';
 
 export class LoginUserUseCase
   implements InterfaceUseCase<LoginUserDTO, Promise<LoginUserUseCaseResponse>>
@@ -52,6 +52,6 @@ export class LoginUserUseCase
       return left(new LoginUserError.EmailOrPasswordIncorrectError());
     }
 
-    return right('logged in');
+    return right(user.getProps);
   }
 }

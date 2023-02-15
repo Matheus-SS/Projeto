@@ -7,11 +7,4 @@ export namespace AppError {
       this.name = 'DomainError';
     }
   }
-
-  export class InternalError extends Error {
-    constructor() {
-      super('Internal Server Error');
-      this.name = 'InternalError';
-    }
-  }
 }

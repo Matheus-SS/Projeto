@@ -19,4 +19,14 @@ export class BaseController {
   public badRequest(res: Response, message?: string) {
     return res.status(400).json({ message: message ? message : 'Bad Request' });
   }
+
+  public notFound(res: Response, message?: string) {
+    return res.status(404).json({ message: message ? message : 'Not Found' });
+  }
+
+  public unAuthorized(res: Response, message?: string) {
+    return res
+      .status(401)
+      .json({ message: message ? message : 'Not Authorized' });
+  }
 }
