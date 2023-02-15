@@ -30,8 +30,8 @@ type ErrorType = {
 };
 
 export const Signup: React.FC = () => {
-  const [authGlobal, setAuthGlobal] = React.useState(false);
-  const [form, setForm] = React.useState({
+  const [authGlobal, setAuthGlobal] = React.useState<boolean>(false);
+  const [form, setForm] = React.useState<Request>({
     username: '',
     email: '',
     password: '',
