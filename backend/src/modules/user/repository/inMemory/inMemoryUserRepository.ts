@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { UserEntity } from '../../entity/User';
 import { InterfaceUserRepository } from '../userRepository.interface';
 const user = UserEntity.createUser({
-  username: 'string',
-  email: 'string1@gmail.com',
-  password: 'string',
+  username: 'guinho',
+  email: 'matheus_sa_santos@hotmail.com',
+  password: '$2b$10$ZGFlaP0DiowJssOyYrxA8eUMO478Nh3WrNyRZBI11..8xZzv2u.pW',
 });
 @Injectable()
 export class InMemoryUserRepository implements InterfaceUserRepository {

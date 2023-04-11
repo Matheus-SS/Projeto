@@ -37,7 +37,7 @@ export class ProfileUserController extends BaseController {
             return this.internalError(response, error.message);
         }
       } else {
-        return this.ok(response, result.value);
+        return this.ok(response, request.session.user);
       }
     } catch (error) {
       return this.internalError(response, error.message);

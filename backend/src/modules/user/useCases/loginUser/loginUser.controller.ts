@@ -50,7 +50,7 @@ export class LoginUserController extends BaseController {
           ...userData,
         };
         request.session.authenticated = true;
-
+        response.cookie('user_session', request.sessionID, { httpOnly: false });
         return this.ok(response, userData);
       }
     } catch (error) {

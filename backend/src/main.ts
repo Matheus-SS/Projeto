@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ClusterService } from './cluster.service';
 import * as session from 'express-session';
 import * as connectRedis from 'connect-redis';
-import IoRedis from 'ioredis';
 
+import { randomUUID, createHash, randomBytes } from 'crypto';
+import { SessionClient } from './session';
 const RedisStore = connectRedis(session);
 
-const redisClient = new IoRedis('redis://localhost:6379');
+const redisClient = new SessionClient();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
@@ -23,8 +23,14 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       name: 'PROJETO_SESSION_ID',
+      genid: function (req) {
+        return createHash('sha256')
+          .update(randomUUID())
+          .update(randomBytes(256))
+          .digest('hex');
+      },
       cookie: {
-        maxAge: 60000,
+        maxAge: 6000000,
       },
     }),
   );

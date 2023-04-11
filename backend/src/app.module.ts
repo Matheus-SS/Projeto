@@ -3,12 +3,13 @@ import { RequestMethod } from '@nestjs/common/enums';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 
 import { UserModule } from './modules/user/useCases/user.module';
+import { SessionClient } from './session';
 import { AuthMiddleware } from './shared/middleware/auth.middleware';
 
 @Module({
   imports: [UserModule],
   controllers: [],
-  providers: [],
+  providers: [SessionClient],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
