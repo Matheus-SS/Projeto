@@ -3,6 +3,11 @@ import { ContainerSearchBar, Wrapper, ContainerProduct } from './styles';
 import { Text } from '../../components/text';
 import { SearchBar } from '../../components/searchBar';
 import { Container } from '../../shared-styles';
+import { useCookies } from 'react-cookie';
+import Cookies from 'universal-cookie';
+import { getProfile } from '../../services/user';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../../hook/useAuth';
 const arrayOfPizzas = [
   {
     id: 1,
@@ -117,44 +122,53 @@ type CartType = {
 
 export const Home: React.FC = () => {
   const [cartGlobal, setCartGlobal] = React.useState<CartType[]>([]);
+
+  const { setUser, isLoadingSession } = useAuth();
   const handleSubmitSearch = (text: string) => {
     console.log('valor do input', text);
   };
-
   const handleAddToCart = (value: any) => {
     console.log('value', value);
     setCartGlobal((prevState) => [...prevState, value]);
   };
+
   return (
     <Container>
-      <Wrapper>
-        <ContainerSearchBar>
-          <SearchBar onSubmit={handleSubmitSearch}></SearchBar>
-        </ContainerSearchBar>
-        <main>
-          <h3>Escolha sua pizza</h3>
-          <ContainerProduct>
-            <ul>
-              {arrayOfPizzas.map((value) => (
-                <li key={value.id} onClick={() => handleAddToCart(value)}>
-                  <div className="card-product">
-                    <img src={value.imageUrl} className="card-product-image" />
-                    <span className="card-product-title">
-                      <Text>{value.name}</Text>
-                    </span>
-                    <p className="card-product-description">
-                      {value.description}
-                    </p>
-                    <span className="card-product-price">
-                      <Text>R$ {value.price}</Text>
-                    </span>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </ContainerProduct>
-        </main>
-      </Wrapper>
+      {isLoadingSession ? (
+        'carregando'
+      ) : (
+        <Wrapper>
+          <ContainerSearchBar>
+            <SearchBar onSubmit={handleSubmitSearch}></SearchBar>
+          </ContainerSearchBar>
+          <main>
+            <h3>Escolha sua pizza</h3>
+            <ContainerProduct>
+              <ul>
+                {arrayOfPizzas.map((value) => (
+                  <li key={value.id} onClick={() => handleAddToCart(value)}>
+                    <div className="card-product">
+                      <img
+                        src={value.imageUrl}
+                        className="card-product-image"
+                      />
+                      <span className="card-product-title">
+                        <Text>{value.name}</Text>
+                      </span>
+                      <p className="card-product-description">
+                        {value.description}
+                      </p>
+                      <span className="card-product-price">
+                        <Text>R$ {value.price}</Text>
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </ContainerProduct>
+          </main>
+        </Wrapper>
+      )}
     </Container>
   );
 };

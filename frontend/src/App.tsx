@@ -10,6 +10,8 @@ import { Signup } from './pages/signup';
 import { Grid } from './shared-styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Profile2 } from './pages/profile2';
+import { AuthProvider } from './hook/useAuth';
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,10 @@ const router = createBrowserRouter([
         path: path.PROFILE,
         element: <Profile />,
       },
+      {
+        path: 'profile2',
+        element: <Profile2 />,
+      },
     ],
   },
   {
@@ -47,7 +53,9 @@ const router = createBrowserRouter([
 export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
       <ReactQueryDevtools initialIsOpen={true} />
     </QueryClientProvider>
   );

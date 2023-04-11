@@ -30,7 +30,7 @@ export const NAVBAR_DATA = [
   {
     id: 4,
     text: 'Trash',
-    path: '/trash',
+    path: '/profile2',
     icon: <HiTrash size={size.icon.medium} />,
   },
 ];

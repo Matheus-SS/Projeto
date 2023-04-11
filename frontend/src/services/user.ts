@@ -10,8 +10,11 @@ export async function createUser<Request, Response>(
 export async function login<Request, Response>(
   data: Request
 ): Promise<Response> {
-  const response = await api.post<Response>('/user/login', data, {
-    withCredentials: true,
-  });
+  const response = await api.post<Response>('/user/login', data);
+  return response.data;
+}
+
+export async function getProfile<Request, Response>(): Promise<Response> {
+  const response = await api.get<Response>('/user/profile');
   return response.data;
 }

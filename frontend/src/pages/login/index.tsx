@@ -2,54 +2,46 @@ import React, { FormEvent } from 'react';
 import { Container } from '../../shared-styles';
 import { ContainerForm } from './styles';
 import { Input } from '../../components/input';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/button';
 import { path } from '../../constants';
 import { z, ZodIssue } from 'zod';
 import { FormError } from '../../components/formError';
 import { Toaster } from 'react-hot-toast';
-import { toastError } from '../../lib/toast';
-import { AxiosError } from 'axios';
+
+import { useAuth } from '../../hook/useAuth';
 import { useMutation } from '@tanstack/react-query';
 import { login } from '../../services/user';
-import { api } from '../../services/api';
+import { toastError } from '../../lib/toast';
+import { AxiosError } from 'axios';
 
 type Request = {
   email: string;
   password: string;
 };
-
 type ErrorType = {
   message: string;
 };
 
+interface Response {
+  email: string;
+  username: string;
+}
+
 export const Login: React.FC = () => {
-  const [authGlobal, setAuthGlobal] = React.useState<boolean>(false);
+  const navigate = useNavigate();
   const [form, setForm] = React.useState<Request>({
     email: '',
     password: '',
   });
-
   const [errors, setErrors] = React.useState<ZodIssue[]>([]);
-
+  const { setUser } = useAuth();
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   }
-
-  const { mutate } = useMutation({
-    mutationFn: (data: Request) => {
-      return login<Request, any>(data);
-    },
-    onError: (error: AxiosError<ErrorType>) => {
-      toastError(error.response?.data.message || 'Erro ao fazer login');
-    },
-    onSuccess: (_: Response) => {
-      console.log('ok');
-    },
-  });
 
   const FormSchema = z.object({
     email: z.string().email({
@@ -60,9 +52,22 @@ export const Login: React.FC = () => {
     }),
   });
 
+  const { mutate } = useMutation({
+    mutationFn: (data: Request) => {
+      return login<Request, any>(data);
+    },
+    onError: (error: AxiosError<ErrorType>) => {
+      toastError(error.response?.data.message || 'Erro ao fazer login');
+    },
+    onSuccess: (response: Response) => {
+      setUser({ ...response, authenticated: true });
+      navigate('/');
+      return response;
+    },
+  });
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const response = await api.post('/user/login', form);
 
     const results = FormSchema.safeParse(form);
 
