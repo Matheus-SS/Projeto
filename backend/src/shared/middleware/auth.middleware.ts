@@ -19,14 +19,14 @@ export class AuthMiddleware extends BaseController implements NestMiddleware {
           .find((value) => value.includes('user_session'));
         const cookieSessionId = userSession.split('=')[1];
 
-        console.log('cookies');
+        console.log('cookies', cookieSessionId);
         const redisSessionId = await this.sessionClient.getValue(
           `sess:${cookieSessionId.split(';')[0]}`,
         );
 
+        // quando altera user_session
         if (!redisSessionId) {
-          response.clearCookie('PROJETO_SESSION_ID');
-          response.clearCookie('user_session');
+          throw new Error('Sessão não encontrada');
         }
         return next();
         // verificar se a sessao existe no redis senao limpar cookie
@@ -38,9 +38,12 @@ export class AuthMiddleware extends BaseController implements NestMiddleware {
           console.log('destruindo sessão');
         });
         response.clearCookie('PROJETO_SESSION_ID');
-        response.clearCookie('user_session');
         return this.unAuthorized(response, 'Não autorizado');
       }
+    } else {
+      // quando altera o projeto session id
+      response.clearCookie('PROJETO_SESSION_ID');
+      return this.unAuthorized(response, 'Não autorizado');
     }
   }
 }

@@ -5,8 +5,9 @@ import { CreateUserController } from './createUser/createUser.controller';
 import { CreateUserProvider } from './createUser/createUser.provider';
 import { LoginUserController } from './loginUser/loginUser.controller';
 import { LoginUserProvider } from './loginUser/loginUser.provider';
-import { ProfileUserController } from './profileUser/profileUser.controller';
-import { ProfileUserProvider } from './profileUser/profileUser.provider';
+import { SessionUserController } from './sessionUser/sessionUser.controller';
+import { SessionUserProvider } from './sessionUser/sessionUser.provider';
+import { SessionClient } from '../../../session';
 
 @Module({
   imports: [UserRepositoryModule],
@@ -14,12 +15,13 @@ import { ProfileUserProvider } from './profileUser/profileUser.provider';
     PasswordHashProvider,
     CreateUserProvider,
     LoginUserProvider,
-    ProfileUserProvider,
+    SessionUserProvider,
+    SessionClient,
   ],
   controllers: [
     CreateUserController,
     LoginUserController,
-    ProfileUserController,
+    SessionUserController,
   ],
 })
 export class UserModule {}
