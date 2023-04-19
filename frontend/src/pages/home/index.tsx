@@ -123,7 +123,7 @@ type CartType = {
 export const Home: React.FC = () => {
   const [cartGlobal, setCartGlobal] = React.useState<CartType[]>([]);
 
-  const { setUser, isLoadingSession } = useAuth();
+  const { isLoadingSession } = useAuth();
   const handleSubmitSearch = (text: string) => {
     console.log('valor do input', text);
   };
@@ -143,6 +143,7 @@ export const Home: React.FC = () => {
           </ContainerSearchBar>
           <main>
             <h3>Escolha sua pizza</h3>
+
             <ContainerProduct>
               <ul>
                 {arrayOfPizzas.map((value) => (

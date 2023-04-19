@@ -1,20 +1,24 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import React, { PropsWithChildren } from 'react';
-import { getProfile, login } from '../services/user';
+import { useQuery } from '@tanstack/react-query';
+import React, { PropsWithChildren, useState } from 'react';
+import { getSession } from '../services/user';
 import { useCookies } from 'react-cookie';
-import { toastError } from '../lib/toast';
 import { AxiosError } from 'axios';
-
-const AuthContext = React.createContext<any>({});
+import { toastError } from '../lib/toast';
 interface IUser {
   email: string;
   username: string;
   authenticated: boolean;
 }
-type Request = {
-  email: string;
-  password: string;
-};
+interface IAuthContext {
+  user: {
+    email: string;
+    username: string;
+    authenticated: boolean;
+  };
+  isLoadingSession: boolean;
+  setUser: React.Dispatch<React.SetStateAction<IUser>>;
+}
+const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
 
 type ErrorType = {
   message: string;
@@ -22,7 +26,7 @@ type ErrorType = {
 // nao tem cookies e tenho usuario = faz nada
 // tenho cookie e nao tenho usuario = busca
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [cookies, setCookie] = useCookies(['user_session']);
+  const [cookies, setCookie, removeToken] = useCookies(['user_session']);
   const [user, setUser] = React.useState<IUser>({
     email: '',
     username: '',
@@ -31,17 +35,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const isRefetch =
     cookies.user_session && user.authenticated === false ? true : false;
+  console.log('isfetch...', isRefetch);
+  console.log('cookies.user_session...', cookies.user_session);
+  console.log('user.authenticated ...', user.authenticated);
 
   const { isFetching: isLoadingSession } = useQuery({
-    queryKey: ['profile'],
-    queryFn: getProfile,
+    queryKey: ['session'],
+    queryFn: getSession,
     enabled: isRefetch,
-    onSuccess: (data: Omit<IUser, 'autheticated'>) => {
+    onSuccess: (data: IUser) => {
       setUser({
         username: data.username,
         email: data.email,
-        authenticated: true,
+        authenticated: data.authenticated,
       });
+    },
+    onError: (error: AxiosError<ErrorType>) => {
+      console.log('error', error);
+      removeToken('user_session');
     },
   });
 
@@ -61,5 +72,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
 export function useAuth() {
   const context = React.useContext(AuthContext);
 
+  if (!context) {
+    throw new Error('useAuth deve ser usado dentro do AuthProvider');
+  }
   return context;
 }

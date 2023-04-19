@@ -1,5 +1,12 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  Route,
+  Navigate,
+  RouteProps,
+} from 'react-router-dom';
 import { Cart } from './components/cart';
 import { Sidebar } from './components/sidebar';
 import { path } from './constants';
@@ -11,10 +18,30 @@ import { Grid } from './shared-styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Profile2 } from './pages/profile2';
-import { AuthProvider } from './hook/useAuth';
+import { AuthProvider, useAuth } from './hook/useAuth';
+
+interface IRouteProps {
+  element: React.ReactElement;
+}
 
 const queryClient = new QueryClient();
+const PrivateRoute: React.FC<IRouteProps> = ({ element }) => {
+  const { user } = useAuth();
 
+  return user.authenticated ? element : <Navigate to="/" replace />;
+};
+
+const PublicRoute: React.FC<IRouteProps> = ({ element }) => {
+  const { user, isLoadingSession } = useAuth();
+
+  return isLoadingSession ? (
+    <span>carregando...</span>
+  ) : user.authenticated ? (
+    <Navigate to="/" replace />
+  ) : (
+    element
+  );
+};
 const AppLayout = () => {
   return (
     <Grid>
@@ -33,21 +60,17 @@ const router = createBrowserRouter([
       },
       {
         path: path.PROFILE,
-        element: <Profile />,
-      },
-      {
-        path: 'profile2',
-        element: <Profile2 />,
+        element: <PrivateRoute element={<Profile />} />,
       },
     ],
   },
   {
     path: path.LOGIN,
-    element: <Login />,
+    element: <PublicRoute element={<Login />} />,
   },
   {
     path: path.SIGNUP,
-    element: <Signup />,
+    element: <PublicRoute element={<Signup />} />,
   },
 ]);
 export const App: React.FC = () => {

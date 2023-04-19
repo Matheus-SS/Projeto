@@ -18,3 +18,8 @@ export async function getProfile<Request, Response>(): Promise<Response> {
   const response = await api.get<Response>('/user/profile');
   return response.data;
 }
+
+export async function getSession<Request, Response>(): Promise<Response> {
+  const response = await api.get<Response>('/user/session');
+  return response.data;
+}

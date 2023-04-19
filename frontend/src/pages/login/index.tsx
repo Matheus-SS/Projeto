@@ -29,13 +29,14 @@ interface Response {
 }
 
 export const Login: React.FC = () => {
+  const { setUser } = useAuth();
   const navigate = useNavigate();
+
   const [form, setForm] = React.useState<Request>({
     email: '',
     password: '',
   });
   const [errors, setErrors] = React.useState<ZodIssue[]>([]);
-  const { setUser } = useAuth();
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm((prevState) => ({
       ...prevState,

@@ -13,6 +13,7 @@ export const IconList = styled.ul`
 
 export const IconListItem = styled.li`
   margin-top: 20px;
+  list-style: none;
   a {
     display: flex;
     flex-direction: column;
@@ -25,16 +26,4 @@ export const IconListButton = styled.button`
   background: transparent;
   border: none;
   cursor: pointer;
-`;
-
-export const ProfileContainer = styled.div`
-  margin: 0 10px 20px;
-  padding: 4px;
-  border: 2px solid ${color.background.secondary};
-  border-radius: 50%;
-  img {
-    height: 100%;
-    width: 100%;
-    border-radius: 50%;
-  }
 `;
