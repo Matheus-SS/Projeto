@@ -8,6 +8,8 @@ import { LoginUserProvider } from './loginUser/loginUser.provider';
 import { SessionUserController } from './sessionUser/sessionUser.controller';
 import { SessionUserProvider } from './sessionUser/sessionUser.provider';
 import { SessionClient } from '../../../session';
+import { LogoutUserProvider } from './logoutUser/logoutUser.provider';
+import { LogoutUserController } from './logoutUser/logoutUser.controller';
 
 @Module({
   imports: [UserRepositoryModule],
@@ -16,12 +18,14 @@ import { SessionClient } from '../../../session';
     CreateUserProvider,
     LoginUserProvider,
     SessionUserProvider,
+    LogoutUserProvider,
     SessionClient,
   ],
   controllers: [
     CreateUserController,
     LoginUserController,
     SessionUserController,
+    LogoutUserController,
   ],
 })
 export class UserModule {}

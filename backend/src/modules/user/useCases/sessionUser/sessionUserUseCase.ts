@@ -19,10 +19,10 @@ export class SessionUserUseCase
     @Inject(SessionClient)
     private session: ISession,
   ) {}
-  public async execute(sessionUserId: string): Promise<any> {
-    console.log('SESSION', sessionUserId);
-    const user = await this.session.getValue(`sess:${sessionUserId}`);
-    console.log('USER...', user);
+  public async execute(
+    sessionIdUser: string,
+  ): Promise<ProfileUserUseCaseResponse> {
+    const user = await this.session.getValue(`sess:${sessionIdUser}`);
     if (!user) {
       return left(new SessionUserError.SessionNotFoundError());
     }
