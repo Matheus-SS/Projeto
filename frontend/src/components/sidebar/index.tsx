@@ -2,7 +2,7 @@ import React from 'react';
 import { IconList, IconListContainer, IconListItem } from './styles';
 import { Container } from '../../shared-styles';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { color, path } from '../../constants';
 import { useAuth } from '../../hook/useAuth';
 import { size } from '../../constants';
@@ -13,6 +13,10 @@ import {
   HiOutlineUserAdd,
   HiOutlineLogout,
 } from 'react-icons/hi';
+import { useMutation } from '@tanstack/react-query';
+import { logout } from '../../services/user';
+import { useCookies } from 'react-cookie';
+import { toastError } from '../../lib/toast';
 type NavItemsType = {
   id: number;
   text: string;
@@ -55,7 +59,39 @@ export const Sidebar: React.FC = () => {
       icon: <HiOutlineIdentification size={size.icon.medium} />,
     },
   ];
-  const { user, isLoadingSession } = useAuth();
+  const { user, isLoadingSession, setUser } = useAuth();
+  const navigate = useNavigate();
+  const [cookies, setCookie, removeToken] = useCookies(['user_session']);
+
+  const mutation = useMutation({
+    mutationFn: () => {
+      return logout();
+    },
+    onError: () => {
+      setUser({
+        authenticated: false,
+        email: '',
+        username: '',
+      });
+      navigate('/');
+      removeToken('user_session');
+      toastError('Erro ao encerrar sessão');
+    },
+    onSuccess: () => {
+      setUser({
+        authenticated: false,
+        email: '',
+        username: '',
+      });
+      navigate('/');
+      removeToken('user_session');
+    },
+  });
+
+  const logoutUser = () => {
+    mutation.mutate();
+  };
+
   const NAVBAR = user.authenticated ? NAVBAR_DATA_PRIVATE : NAVBAR_DATA_PUBLIC;
   return (
     <Container>
@@ -96,7 +132,7 @@ export const Sidebar: React.FC = () => {
               listStyle: 'none',
             }}
           >
-            <HiOutlineLogout size={size.font.large} />
+            <HiOutlineLogout size={size.font.large} onClick={logoutUser} />
             <p>Sair</p>
           </NavLink>
         </IconListItem>

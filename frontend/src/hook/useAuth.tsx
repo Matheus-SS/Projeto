@@ -1,9 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
+import {
+  UseMutationResult,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import React, { PropsWithChildren, useState } from 'react';
-import { getSession } from '../services/user';
+import { getSession, logout } from '../services/user';
 import { useCookies } from 'react-cookie';
 import { AxiosError } from 'axios';
 import { toastError } from '../lib/toast';
+import { useNavigate } from 'react-router-dom';
 interface IUser {
   email: string;
   username: string;
@@ -32,7 +37,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     username: '',
     authenticated: false,
   } as IUser);
-
+  // caso dê refresh na pagina
   const isRefetch =
     cookies.user_session && user.authenticated === false ? true : false;
   console.log('isfetch...', isRefetch);
