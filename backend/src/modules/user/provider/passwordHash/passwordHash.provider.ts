@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common';
-import { PASSWORD_HASH_PROVIDER } from '../constants';
+import { PASSWORD_HASH_PROVIDER } from '@src/constants';
 import { BcryptHashPassword } from './Bcrypt/bcrypt.service';
 
 export const PasswordHashProvider: Provider = {

@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
-import { USER_REPOSITORY_PROVIDER } from './constants';
-import { InMemoryUserRepository } from './inMemory/inMemoryUserRepository';
+import { USER_REPOSITORY_PROVIDER } from '@src/constants';
+import { UserRepository } from './userRepository';
 
 export const UserRepositoryProvider: Provider = {
   provide: USER_REPOSITORY_PROVIDER,
-  useClass: InMemoryUserRepository,
+  useClass: UserRepository,
 };

@@ -1,6 +1,6 @@
 import { InterfacePasswordHash } from '../passwordHash.interface';
 import * as bcrypt from 'bcrypt';
-import { SALT_ROUNDS } from '../../constants';
+import { SALT_ROUNDS } from '@src/constants';
 
 export class BcryptHashPassword implements InterfacePasswordHash {
   async generateHash(password: string): Promise<string> {

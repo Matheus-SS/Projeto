@@ -5,6 +5,10 @@ export class BaseController {
     return res.status(200).json(message ? message : 'ok');
   }
 
+  public created(res: Response, message?: any) {
+    return res.status(201).json(message ? message : 'ok');
+  }
+
   public conflict(res: Response, message?: string) {
     return res.status(409).json({ message: message ? message : 'Conflict' });
   }

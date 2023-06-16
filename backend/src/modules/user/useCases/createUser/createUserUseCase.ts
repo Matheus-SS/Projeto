@@ -1,50 +1,87 @@
-import { UserEntity } from '../../entity/User';
 import { Inject, Injectable } from '@nestjs/common';
-import { InterfaceUseCase } from '../../../../shared/core/useCase.interface';
-import { USER_REPOSITORY_PROVIDER } from '../../repository/constants';
-import { InterfaceUserRepository } from '../../repository/userRepository.interface';
-import { left, right } from '../../../../shared/core/Result';
-import { CreateUserError } from './createUserError';
-import { AppError } from '../../../../shared/core/appError';
-import { CreateUserDTO } from './createUserDTO';
-import { CreateUserUseCaseResponse } from './createUserUseCaseResponse';
-import { InterfacePasswordHash } from '../../provider/passwordHash/passwordHash.interface';
-import { PASSWORD_HASH_PROVIDER } from '../../provider/constants';
+
+import { InterfaceUseCase } from '@shared/useCase.interface';
+import { CreateUserDTO, CreateUserResponse } from './createUserTypes';
+import { USER_REPOSITORY_PROVIDER } from '@src/constants';
+import { IUserRepository } from '@modules/user/repository/userRepository.interface';
+import { EmailAlreadyExistsError } from './createUserError';
+import { PASSWORD_HASH_PROVIDER } from '@src/constants';
+import { InterfacePasswordHash } from '@modules/user/provider/passwordHash/passwordHash.interface';
+
+import * as validation from '@shared/util/validation';
+import { ValidationInputError } from '@shared/validationError';
+
 @Injectable()
 export class CreateUserUseCase
   implements
-    InterfaceUseCase<CreateUserDTO, Promise<CreateUserUseCaseResponse>>
+    InterfaceUseCase<
+      CreateUserDTO,
+      Promise<
+        CreateUserResponse | EmailAlreadyExistsError | ValidationInputError
+      >
+    >
 {
   constructor(
     @Inject(USER_REPOSITORY_PROVIDER)
-    private userRepository: InterfaceUserRepository,
+    private userRepository: IUserRepository,
     @Inject(PASSWORD_HASH_PROVIDER)
-    private passwordHashProvider: InterfacePasswordHash,
+    private encryptService: InterfacePasswordHash,
   ) {}
-  public async execute(
-    createUser: CreateUserDTO,
-  ): Promise<CreateUserUseCaseResponse> {
-    const userOrFail = UserEntity.createUser(createUser);
 
-    if (userOrFail.failure) {
-      return left(new AppError.DomainError(userOrFail.error.toString()));
+  public async execute({
+    email,
+    password,
+    username,
+  }: CreateUserDTO): Promise<
+    CreateUserResponse | EmailAlreadyExistsError | ValidationInputError
+  > {
+    if (validation.againstNullOrUndefined(username)) {
+      return new ValidationInputError('Nome de usuário obrigatório');
     }
 
-    const hashedPassword = await this.passwordHashProvider.generateHash(
-      userOrFail.getValue().getPassword.getValue,
-    );
-
-    userOrFail.getValue().setPassword = hashedPassword;
-
-    const email = userOrFail.getValue().getEmail.getValue;
-
-    const emailExists = await this.userRepository.findByEmail(email);
-
-    if (emailExists) {
-      return left(new CreateUserError.EmailAlreadyExistsError(email));
+    if (validation.againstNullOrUndefined(email)) {
+      return new ValidationInputError('Email obrigatório');
     }
-    const user = await this.userRepository.createUser(userOrFail.getValue());
 
-    return right(user);
+    if (validation.againstNullOrUndefined(password)) {
+      return new ValidationInputError('password obrigatório');
+    }
+
+    if (username.length < 4) {
+      return new ValidationInputError(
+        'Nome de usuário pelo menos 4 caracteres',
+      );
+    }
+
+    if (username.length > 15) {
+      return new ValidationInputError(
+        'Nome de usuário no máximo 15 caracteres',
+      );
+    }
+
+    if (password.length < 6) {
+      return new ValidationInputError('Senha deve ter pelo menos 6 caracteres');
+    }
+
+    if (!validation.isValidEmail(email)) {
+      return new ValidationInputError('Email inválido');
+    }
+
+    const user = await this.userRepository.findByEmail(email);
+
+    if (user) {
+      return new EmailAlreadyExistsError(email);
+    }
+
+    const passwordHashed = await this.encryptService.generateHash(password);
+    await this.userRepository.save({
+      email,
+      password: passwordHashed,
+      username,
+    });
+    return {
+      email,
+      username,
+    };
   }
 }
