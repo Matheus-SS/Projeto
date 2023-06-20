@@ -7,14 +7,17 @@ import { ISession } from '@modules/session/repository/sessionRepository.interfac
 import { verifyJWT } from '@shared/util/jwt';
 
 @Injectable()
-export class AuthMiddleware extends BaseController implements NestMiddleware {
+export class SessionMiddleware
+  extends BaseController
+  implements NestMiddleware
+{
   constructor(
     @Inject(FIND_SESSION_QUERY_PROVIDER)
     private findSession: InterfaceQuery<string, Promise<ISession>>,
   ) {
     super();
   }
-  async use(request: Request, response: Response, next: NextFunction) {
+  async use(request: Request, next: NextFunction) {
     let token;
     if (request.headers.cookie) {
       try {
@@ -26,15 +29,12 @@ export class AuthMiddleware extends BaseController implements NestMiddleware {
         request.userId = session.user_id;
         next();
       } catch (error: any) {
-        console.error(error);
-        response.status(401);
-        response.json({ message: 'Não autorizado, falha no token ' });
+        request.userId = null;
       }
     }
 
     if (!token) {
-      response.status(401);
-      response.json({ message: 'Não autorizado, falha no token ' });
+      request.userId = null;
     }
   }
 }

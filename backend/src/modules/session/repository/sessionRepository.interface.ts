@@ -5,4 +5,5 @@ export interface ISession {
 }
 export interface ISessionRepository {
   save(data: Pick<ISession, 'user_id'>): Promise<ISession>;
+  findById(data: Pick<ISession, 'id'>): Promise<ISession>;
 }

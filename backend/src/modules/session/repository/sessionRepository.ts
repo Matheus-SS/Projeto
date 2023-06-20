@@ -21,4 +21,12 @@ export class SessionRepository implements ISessionRepository {
       id: randomUUID(),
     });
   }
+
+  public async findById(data: Pick<ISession, 'id'>): Promise<ISession> {
+    return this.session.findOne({
+      where: {
+        id: data.id,
+      },
+    });
+  }
 }
