@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import { User } from './entity/User.entity';
 import { Injectable } from '@nestjs/common';
+import { Session } from './entity/Session.entity';
 
 @Injectable()
 export default class TypeOrmDatabase {
@@ -18,7 +19,7 @@ export default class TypeOrmDatabase {
       password: 'lplXM9W0o67Uz24HKYel',
       database: 'railway',
       logging: true,
-      entities: [User],
+      entities: [User, Session],
     });
 
     this.connection

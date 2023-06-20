@@ -15,10 +15,16 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .exclude({
-        path: '/api/v1/user',
-        method: RequestMethod.POST,
-      }) // exclui rotas que não queremos aplicar autenticação
+      .exclude(
+        {
+          path: '/api/v1/user',
+          method: RequestMethod.POST,
+        },
+        {
+          path: '/api/v1/user/login',
+          method: RequestMethod.POST,
+        },
+      ) // exclui rotas que não queremos aplicar autenticação
       .forRoutes('*');
   }
 }

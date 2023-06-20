@@ -5,18 +5,7 @@ import { EmailAlreadyExistsError } from './createUserError';
 import { Response } from 'express';
 import { BaseController } from '@shared/baseController';
 import { ValidationInputError } from '@shared/validationError';
-
-type CreateUserDTO = {
-  username: string;
-  email: string;
-  password: string;
-};
-
-type CreateUserResponse = {
-  username: string;
-  email: string;
-  password: string;
-};
+import { CreateUserDTO, CreateUserResponse } from './createUserTypes';
 
 @Controller(USER_ROUTE)
 export class CreateUserController extends BaseController {
