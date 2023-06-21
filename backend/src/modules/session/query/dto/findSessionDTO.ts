@@ -1,5 +1,7 @@
 export interface IFindSession {
   id: string;
-  user_id: number;
+  session_id: string;
+  email: string;
+  username: string;
   created_at: Date;
 }

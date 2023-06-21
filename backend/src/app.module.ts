@@ -6,7 +6,6 @@ import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 import { AuthMiddleware } from './shared/middleware/auth.middleware';
 import { UserModule } from './modules/user/useCases/user.module';
 import { SessionModule } from '@modules/session/session.module';
-import { SessionMiddleware } from '@shared/middleware/session.middleware';
 
 @Module({
   imports: [SessionModule, UserModule],
@@ -26,7 +25,11 @@ export class AppModule implements NestModule {
           path: '/api/v1/user/login',
           method: RequestMethod.POST,
         },
-      ) // exclui rotas que não queremos aplicar autenticação
+        {
+          path: '/api/v1/session',
+          method: RequestMethod.GET,
+        },
+      )
       .forRoutes('*');
   }
 }

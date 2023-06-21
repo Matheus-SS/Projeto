@@ -70,8 +70,8 @@ export class LoginUserUseCase
       return new LoginUserError();
     }
 
-    const session = await this.sessionRepository.save({ user_id: user.id });
-
+    const session = await this.sessionRepository.create({ user_id: user.id });
+    console.log('session', session);
     return {
       token: generateToken(session.id),
       user: {

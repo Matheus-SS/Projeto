@@ -28,7 +28,7 @@ export class AuthMiddleware extends BaseController implements NestMiddleware {
       } catch (error: any) {
         console.error(error);
         response.status(401);
-        response.json({ message: 'Não autorizado, falha no token ' });
+        response.json({ message: 'Não autorizado, falha no token' });
       }
     }
 

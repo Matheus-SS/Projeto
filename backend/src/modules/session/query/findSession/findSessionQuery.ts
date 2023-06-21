@@ -10,8 +10,8 @@ export class FindSessionQuery {
     private sessionRepository: ISessionRepository,
   ) {}
 
-  public async execute(id: string): Promise<IFindSession> {
-    return this.sessionRepository.findById({
+  public async execute(id: string): Promise<IFindSession[]> {
+    return this.sessionRepository.find({
       id: id,
     });
   }

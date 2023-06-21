@@ -74,7 +74,7 @@ export class CreateUserUseCase
     }
 
     const passwordHashed = await this.encryptService.generateHash(password);
-    await this.userRepository.save({
+    await this.userRepository.create({
       email,
       password: passwordHashed,
       username,

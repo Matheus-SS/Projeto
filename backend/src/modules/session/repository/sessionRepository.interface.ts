@@ -3,7 +3,16 @@ export interface ISession {
   user_id: number;
   created_at: Date;
 }
+export interface ISessionFind {
+  id: string;
+  session_id: string;
+  email: string;
+  username: string;
+  created_at: Date;
+}
 export interface ISessionRepository {
-  save(data: Pick<ISession, 'user_id'>): Promise<ISession>;
-  findById(data: Pick<ISession, 'id'>): Promise<ISession>;
+  create(
+    data: Pick<ISession, 'user_id'>,
+  ): Promise<Omit<ISession, 'created_at'>>;
+  find(data: Pick<ISession, 'id'>): Promise<ISessionFind[]>;
 }

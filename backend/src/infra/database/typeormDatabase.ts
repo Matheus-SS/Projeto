@@ -2,6 +2,7 @@ import { DataSource } from 'typeorm';
 import { User } from './entity/User.entity';
 import { Injectable } from '@nestjs/common';
 import { Session } from './entity/Session.entity';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Injectable()
 export default class TypeOrmDatabase {
@@ -20,6 +21,7 @@ export default class TypeOrmDatabase {
       database: 'railway',
       logging: true,
       entities: [User, Session],
+      namingStrategy: new SnakeNamingStrategy(),
     });
 
     this.connection

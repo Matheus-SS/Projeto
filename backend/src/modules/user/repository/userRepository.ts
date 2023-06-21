@@ -18,11 +18,13 @@ export class UserRepository implements IUserRepository {
     return this.database.connection.getRepository(User);
   }
 
-  public async save(data: Omit<IUser, 'id'>): Promise<void> {
-    await this.user.save(data);
+  public async create(data: Omit<IUser, 'id'>): Promise<void> {
+    const user = this.user.create(data);
+    await this.user.insert(user);
   }
 
   public async findByEmail(email: string): Promise<IUser> {
+    console.log('email');
     return this.user.findOne({
       where: {
         email: email,

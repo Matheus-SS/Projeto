@@ -1,4 +1,12 @@
-import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  BaseEntity,
+  PrimaryColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from './User.entity';
 
 @Entity('tbl_session')
 export class Session extends BaseEntity {
@@ -11,6 +19,7 @@ export class Session extends BaseEntity {
 
   @Column({
     nullable: false,
+    name: 'created_at',
   })
   created_at: Date;
 }
