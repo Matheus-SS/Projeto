@@ -3,7 +3,7 @@ import { api } from './api';
 export async function createUser<Request, Response>(
   data: Request
 ): Promise<Response> {
-  const response = await api.post<Response>('/user/create', data);
+  const response = await api.post<Response>('/user', data);
   return response.data;
 }
 
@@ -20,7 +20,7 @@ export async function getProfile<Response>(): Promise<Response> {
 }
 
 export async function getSession<Response>(): Promise<Response> {
-  const response = await api.get<Response>('/user/session');
+  const response = await api.get<Response>('/session');
   return response.data;
 }
 

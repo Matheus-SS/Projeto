@@ -123,7 +123,7 @@ type CartType = {
 export const Home: React.FC = () => {
   const [cartGlobal, setCartGlobal] = React.useState<CartType[]>([]);
 
-  const { isLoadingSession } = useAuth();
+  const { user } = useAuth();
   const handleSubmitSearch = (text: string) => {
     console.log('valor do input', text);
   };
@@ -134,7 +134,7 @@ export const Home: React.FC = () => {
 
   return (
     <Container>
-      {isLoadingSession ? (
+      {false ? (
         'carregando'
       ) : (
         <Wrapper>

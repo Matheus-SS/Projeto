@@ -59,9 +59,8 @@ export const Sidebar: React.FC = () => {
       icon: <HiOutlineIdentification size={size.icon.medium} />,
     },
   ];
-  const { user, isLoadingSession, setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
-  const [cookies, setCookie, removeToken] = useCookies(['user_session']);
 
   const mutation = useMutation({
     mutationFn: () => {
@@ -69,22 +68,18 @@ export const Sidebar: React.FC = () => {
     },
     onError: () => {
       setUser({
-        authenticated: false,
         email: '',
         username: '',
       });
       navigate('/');
-      removeToken('user_session');
       toastError('Erro ao encerrar sessão');
     },
     onSuccess: () => {
       setUser({
-        authenticated: false,
         email: '',
         username: '',
       });
       navigate('/');
-      removeToken('user_session');
     },
   });
 
@@ -92,34 +87,30 @@ export const Sidebar: React.FC = () => {
     mutation.mutate();
   };
 
-  const NAVBAR = user.authenticated ? NAVBAR_DATA_PRIVATE : NAVBAR_DATA_PUBLIC;
+  const NAVBAR = user.email ? NAVBAR_DATA_PRIVATE : NAVBAR_DATA_PUBLIC;
   return (
     <Container>
-      {isLoadingSession ? (
-        'carregando'
-      ) : (
-        <IconListContainer>
-          <IconList>
-            {NAVBAR.map((navI: NavItemsType) => (
-              <IconListItem key={navI.id}>
-                <NavLink
-                  to={navI.path}
-                  style={({ isActive }) =>
-                    isActive
-                      ? { color: color.fonts.active }
-                      : { color: color.fonts.secondary }
-                  }
-                >
-                  {navI.icon}
-                  <p>{navI.text}</p>
-                </NavLink>
-              </IconListItem>
-            ))}
-          </IconList>
-        </IconListContainer>
-      )}
+      <IconListContainer>
+        <IconList>
+          {NAVBAR.map((navI: NavItemsType) => (
+            <IconListItem key={navI.id}>
+              <NavLink
+                to={navI.path}
+                style={({ isActive }) =>
+                  isActive
+                    ? { color: color.fonts.active }
+                    : { color: color.fonts.secondary }
+                }
+              >
+                {navI.icon}
+                <p>{navI.text}</p>
+              </NavLink>
+            </IconListItem>
+          ))}
+        </IconList>
+      </IconListContainer>
 
-      {user.authenticated && (
+      {user.email && (
         <IconListItem
           style={{
             marginBottom: '20px',

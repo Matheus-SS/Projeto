@@ -25,25 +25,29 @@ interface IRouteProps {
 }
 
 const queryClient = new QueryClient();
-const PrivateRoute: React.FC<IRouteProps> = ({ element }) => {
-  const { user } = useAuth();
 
-  return user.authenticated ? element : <Navigate to="/" replace />;
+const PrivateRoute: React.FC<IRouteProps> = ({ element }) => {
+  const { user, isFetchingSession } = useAuth();
+  if (isFetchingSession) {
+    return <div>carregando</div>;
+  } else {
+    return user.email ? element : <Navigate to="/" replace />;
+  }
 };
 
 const PublicRoute: React.FC<IRouteProps> = ({ element }) => {
-  const { user, isLoadingSession } = useAuth();
-
-  return isLoadingSession ? (
-    <span>carregando...</span>
-  ) : user.authenticated ? (
-    <Navigate to="/" replace />
-  ) : (
-    element
-  );
+  const { user, isFetchingSession } = useAuth();
+  if (isFetchingSession) {
+    return <div>carregando</div>;
+  } else {
+    return user.email ? <Navigate to="/" replace /> : element;
+  }
 };
 const AppLayout = () => {
-  return (
+  const { isFetchingSession } = useAuth();
+  return isFetchingSession ? (
+    <div>carregando...</div>
+  ) : (
     <Grid>
       <Sidebar />
       <Outlet />

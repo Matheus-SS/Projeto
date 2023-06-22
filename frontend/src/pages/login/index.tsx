@@ -24,8 +24,10 @@ type ErrorType = {
 };
 
 interface Response {
-  email: string;
-  username: string;
+  user: {
+    email: string;
+    username: string;
+  };
 }
 
 export const Login: React.FC = () => {
@@ -61,7 +63,10 @@ export const Login: React.FC = () => {
       toastError(error.response?.data.message || 'Erro ao fazer login');
     },
     onSuccess: (response: Response) => {
-      setUser({ ...response, authenticated: true });
+      setUser({
+        email: response.user.email,
+        username: response.user.username,
+      });
       navigate('/');
       return response;
     },

@@ -12,16 +12,21 @@ import { useNavigate } from 'react-router-dom';
 interface IUser {
   email: string;
   username: string;
-  authenticated: boolean;
+}
+
+interface IUserSession {
+  user: {
+    email: string;
+    username: string;
+  };
 }
 interface IAuthContext {
   user: {
     email: string;
     username: string;
-    authenticated: boolean;
   };
-  isLoadingSession: boolean;
   setUser: React.Dispatch<React.SetStateAction<IUser>>;
+  isFetchingSession: boolean;
 }
 const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
 
@@ -31,42 +36,34 @@ type ErrorType = {
 // nao tem cookies e tenho usuario = faz nada
 // tenho cookie e nao tenho usuario = busca
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [cookies, setCookie, removeToken] = useCookies(['user_session']);
+  const [allowFetch, setAllowFetch] = useState<boolean>(true);
   const [user, setUser] = React.useState<IUser>({
     email: '',
     username: '',
-    authenticated: false,
   } as IUser);
-  // caso dê refresh na pagina
-  const isRefetch =
-    cookies.user_session && user.authenticated === false ? true : false;
-  console.log('isfetch...', isRefetch);
-  console.log('cookies.user_session...', cookies.user_session);
-  console.log('user.authenticated ...', user.authenticated);
 
-  const { isFetching: isLoadingSession } = useQuery({
+  const { isFetching: isFetchingSession } = useQuery({
     queryKey: ['session'],
     queryFn: getSession,
-    enabled: isRefetch,
-    onSuccess: (data: IUser) => {
+    enabled: allowFetch,
+    onSuccess: (data: IUserSession) => {
       setUser({
-        username: data.username,
-        email: data.email,
-        authenticated: data.authenticated,
+        username: data.user?.username || '',
+        email: data.user?.email || '',
       });
+      setAllowFetch(false);
     },
     onError: (error: AxiosError<ErrorType>) => {
       console.log('error', error);
-      removeToken('user_session');
+      setAllowFetch(false);
     },
   });
-
   return (
     <AuthContext.Provider
       value={{
         user,
         setUser,
-        isLoadingSession,
+        isFetchingSession: isFetchingSession,
       }}
     >
       {children}
