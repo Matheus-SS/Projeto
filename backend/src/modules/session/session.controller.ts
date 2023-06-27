@@ -28,7 +28,6 @@ export class SessionController extends BaseController {
         const { id } = verifyJWT(token);
 
         const session = await this.findSession.execute(id);
-
         return response.status(200).json({
           user: {
             username: session[0].username.trim(),
@@ -37,6 +36,7 @@ export class SessionController extends BaseController {
         });
       } catch (error: any) {
         response.status(401);
+        response.clearCookie('token');
         response.json({ message: 'Não autorizado, falha no token' });
       }
     }

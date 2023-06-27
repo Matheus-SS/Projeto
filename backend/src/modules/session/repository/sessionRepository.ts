@@ -50,4 +50,8 @@ export class SessionRepository implements ISessionRepository {
       [data.id],
     );
   }
+
+  public async delete(id: string): Promise<void> {
+    await this.session.delete({ id: id });
+  }
 }

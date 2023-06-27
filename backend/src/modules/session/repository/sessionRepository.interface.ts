@@ -15,4 +15,5 @@ export interface ISessionRepository {
     data: Pick<ISession, 'user_id'>,
   ): Promise<Omit<ISession, 'created_at'>>;
   find(data: Pick<ISession, 'id'>): Promise<ISessionFind[]>;
+  delete(id: string): Promise<void>;
 }
