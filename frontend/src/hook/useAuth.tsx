@@ -58,6 +58,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       setAllowFetch(false);
     },
   });
+
   return (
     <AuthContext.Provider
       value={{

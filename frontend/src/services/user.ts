@@ -25,6 +25,6 @@ export async function getSession<Response>(): Promise<Response> {
 }
 
 export async function logout<Response>(): Promise<Response> {
-  const response = await api.delete<Response>('/user/session/logout');
+  const response = await api.delete<Response>('/session/logout');
   return response.data;
 }
