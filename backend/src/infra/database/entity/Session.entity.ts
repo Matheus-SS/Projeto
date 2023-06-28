@@ -1,12 +1,4 @@
-import {
-  Entity,
-  Column,
-  BaseEntity,
-  PrimaryColumn,
-  OneToOne,
-  JoinColumn,
-} from 'typeorm';
-import { User } from './User.entity';
+import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm';
 
 @Entity('tbl_session')
 export class Session extends BaseEntity {

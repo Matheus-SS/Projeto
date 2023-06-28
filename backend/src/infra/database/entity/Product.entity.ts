@@ -1,9 +1,41 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryColumn } from 'typeorm';
 
-@Entity()
+@Entity('tbl_product')
 export class Product extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-  @Column()
-  username: string;
+  @PrimaryColumn()
+  id: string;
+  @Column({
+    nullable: false,
+  })
+  name: string;
+
+  @Column({
+    nullable: true,
+  })
+  description: string;
+
+  @Column({
+    nullable: true,
+  })
+  image: string;
+
+  @Column({
+    nullable: false,
+  })
+  price: number;
+
+  @Column({
+    nullable: false,
+  })
+  quantity: number;
+
+  @Column({
+    nullable: false,
+  })
+  created_at: Date;
+
+  @Column({
+    nullable: true,
+  })
+  updated_at: Date;
 }
