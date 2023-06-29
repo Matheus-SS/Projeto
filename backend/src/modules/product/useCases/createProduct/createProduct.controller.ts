@@ -7,6 +7,7 @@ import {
 import { CreateProductUseCase } from './createProductUseCase';
 import { CreateProduct } from '@modules/product/dto/createProductDTO';
 import { Response } from 'express';
+import { ValidationInputError } from '@shared/validationError';
 @Controller(PRODUCT_ROUTE)
 export class CreateProductController extends BaseController {
   constructor(
@@ -18,17 +19,21 @@ export class CreateProductController extends BaseController {
 
   @Post()
   public async executeImpl(
-    @Body() { description, name, price, quantity }: CreateProduct,
+    @Body() { description, name, price, quantity, image }: CreateProduct,
     @Res() response: Response,
   ): Promise<Response> {
     try {
       const result = await this.createProduct.execute({
         description,
+        image,
         name,
         price,
         quantity,
       });
 
+      if (result instanceof ValidationInputError) {
+        return this.badRequest(response, result.message);
+      }
       return this.ok(response, result);
     } catch (error: any) {
       return this.internalError(response, error.message);

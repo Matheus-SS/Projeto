@@ -30,6 +30,10 @@ export class AppModule implements NestModule {
           path: '/api/v1/session',
           method: RequestMethod.GET,
         },
+        {
+          path: '/api/v1/product',
+          method: RequestMethod.GET,
+        },
       )
       .forRoutes('*');
   }

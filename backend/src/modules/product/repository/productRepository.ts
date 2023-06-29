@@ -5,6 +5,7 @@ import { DATABASE_TYPEORM } from '@src/constants';
 import { randomUUID } from 'crypto';
 import {
   CreateProduct,
+  IProduct,
   IProductRepository,
 } from './productRepository.interface';
 
@@ -25,8 +26,15 @@ export class ProductRepository implements IProductRepository {
       description: data.description,
       price: data.price,
       quantity: data.quantity,
+      image: data.image,
     });
 
     await this.product.insert(product);
+  }
+
+  async list(): Promise<IProduct[]> {
+    return this.product.query(`
+      SELECT * FROM tbl_product
+    `);
   }
 }

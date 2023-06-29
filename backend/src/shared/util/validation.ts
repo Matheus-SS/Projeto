@@ -12,3 +12,10 @@ export function againstNullOrUndefined(value: string): boolean {
   }
   return false;
 }
+
+export function numberChecker(value: any): boolean {
+  if (typeof value === 'number') {
+    return true;
+  }
+  return false;
+}
