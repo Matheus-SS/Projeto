@@ -3,113 +3,12 @@ import { ContainerSearchBar, Wrapper, ContainerProduct } from './styles';
 import { Text } from '../../components/text';
 import { SearchBar } from '../../components/searchBar';
 import { Container } from '../../shared-styles';
-import { useCookies } from 'react-cookie';
-import Cookies from 'universal-cookie';
-import { getProfile } from '../../services/user';
-import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../hook/useAuth';
-const arrayOfPizzas = [
-  {
-    id: 1,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 10.5,
-  },
-  {
-    id: 2,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 20.5,
-  },
-  {
-    id: 3,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 45.99,
-  },
-  {
-    id: 4,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 99.99,
-  },
-  {
-    id: 5,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 99.99,
-  },
-  {
-    id: 6,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 99.99,
-  },
-  {
-    id: 7,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 99.99,
-  },
-  {
-    id: 8,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 99.99,
-  },
-  {
-    id: 9,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 99.99,
-  },
-  {
-    id: 10,
-    name: 'Pizza Doce',
-    quantity: 20,
-    description: 'Pizza feita com morango',
-    imageUrl:
-      'https://www.dicasdemulher.com.br/wp-content/uploads/2018/09/pizza-doce-0.jpg',
-    categoryId: 1,
-    price: 99.99,
-  },
-];
+import { useListProduct } from '../../hook/useListProduct';
+import { HiShoppingCart } from 'react-icons/hi';
+import { size } from '../../constants';
+const imageNotFoundUrl =
+  'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
 type CartType = {
   id: number;
   name: string;
@@ -127,6 +26,8 @@ export const Home: React.FC = () => {
   const handleSubmitSearch = (text: string) => {
     console.log('valor do input', text);
   };
+  const { isLoading, data } = useListProduct();
+
   const handleAddToCart = (value: any) => {
     console.log('value', value);
     setCartGlobal((prevState) => [...prevState, value]);
@@ -134,23 +35,24 @@ export const Home: React.FC = () => {
 
   return (
     <Container>
-      {false ? (
-        'carregando'
-      ) : (
-        <Wrapper>
-          <ContainerSearchBar>
-            <SearchBar onSubmit={handleSubmitSearch}></SearchBar>
-          </ContainerSearchBar>
-          <main>
-            <h3>Escolha sua pizza</h3>
+      <Wrapper>
+        <ContainerSearchBar>
+          <SearchBar onSubmit={handleSubmitSearch}></SearchBar>
+        </ContainerSearchBar>
+        <main>
+          <h3>Escolha sua pizza</h3>
 
+          {isLoading ? (
+            'carregando'
+          ) : (
             <ContainerProduct>
               <ul>
-                {arrayOfPizzas.map((value) => (
-                  <li key={value.id} onClick={() => handleAddToCart(value)}>
+                {data?.length == 0 && <li>Produtos não encontrados</li>}
+                {data?.map((value) => (
+                  <li key={value.id}>
                     <div className="card-product">
                       <img
-                        src={value.imageUrl}
+                        src={value.image || imageNotFoundUrl}
                         className="card-product-image"
                       />
                       <span className="card-product-title">
@@ -159,17 +61,27 @@ export const Home: React.FC = () => {
                       <p className="card-product-description">
                         {value.description}
                       </p>
-                      <span className="card-product-price">
-                        <Text>R$ {value.price}</Text>
-                      </span>
+                      <div className="card-product-cart">
+                        <span className="card-product-price">
+                          <Text>R$ {value.price}</Text>
+                        </span>
+                        <span>
+                          <button
+                            className="card-product-add-cart-button"
+                            onClick={() => handleAddToCart(value)}
+                          >
+                            <HiShoppingCart size={size.icon.medium} />
+                          </button>
+                        </span>
+                      </div>
                     </div>
                   </li>
                 ))}
               </ul>
             </ContainerProduct>
-          </main>
-        </Wrapper>
-      )}
+          )}
+        </main>
+      </Wrapper>
     </Container>
   );
 };

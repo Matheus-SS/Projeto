@@ -20,6 +20,7 @@ export const ContainerProduct = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-bottom: 10px;
   }
   ul,
   li {
@@ -37,11 +38,7 @@ export const ContainerProduct = styled.div`
     box-shadow: 2px 4px 19px -3px rgba(143, 143, 143, 1);
     display: flex;
     flex-direction: column;
-    align-items: center;
-  }
-
-  .card-product:hover {
-    box-shadow: 2px 4px 35px -3px rgba(143, 143, 143, 1);
+    align-items: flex-start;
   }
 
   .card-product-image {
@@ -60,11 +57,22 @@ export const ContainerProduct = styled.div`
     font-size: ${size.font.medium}px;
     color: ${color.fonts.primary};
   }
+  .card-product-cart {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
   .card-product-price {
     p {
       font-size: ${size.font.medium}px;
       font-weight: bold;
       color: ${color.fonts.primary};
     }
+  }
+  .card-product-add-cart-button {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
   }
 `;
