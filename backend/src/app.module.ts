@@ -7,9 +7,10 @@ import { AuthMiddleware } from './shared/middleware/auth.middleware';
 import { UserModule } from './modules/user/useCases/user.module';
 import { SessionModule } from '@modules/session/session.module';
 import { ProductModule } from '@modules/product/product.module';
+import { CartModule } from '@modules/cart/cart.module';
 
 @Module({
-  imports: [SessionModule, UserModule, ProductModule],
+  imports: [SessionModule, UserModule, ProductModule, CartModule],
   controllers: [],
   providers: [],
 })

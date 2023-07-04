@@ -3,14 +3,14 @@ import { NextFunction, Request, Response } from 'express';
 import { BaseController } from '../baseController';
 import { FIND_SESSION_QUERY_PROVIDER } from '@src/constants';
 import { InterfaceQuery } from '@shared/query.interface';
-import { ISession } from '@modules/session/repository/sessionRepository.interface';
 import { verifyJWT } from '@shared/util/jwt';
+import { IFindSession } from '@modules/session/query/dto/findSessionDTO';
 
 @Injectable()
 export class AuthMiddleware extends BaseController implements NestMiddleware {
   constructor(
     @Inject(FIND_SESSION_QUERY_PROVIDER)
-    private findSession: InterfaceQuery<string, Promise<ISession>>,
+    private findSession: InterfaceQuery<string, Promise<IFindSession[]>>,
   ) {
     super();
   }
@@ -23,7 +23,8 @@ export class AuthMiddleware extends BaseController implements NestMiddleware {
         const { id } = verifyJWT(token);
 
         const session = await this.findSession.execute(id);
-        request.userId = session.user_id;
+
+        request.userId = session[0].id;
         next();
       } catch (error: any) {
         console.error(error);

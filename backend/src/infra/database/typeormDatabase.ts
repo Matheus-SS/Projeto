@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Session } from './entity/Session.entity';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { Product } from './entity/Product.entity';
+import { Cart } from './entity/Cart.entity';
 
 @Injectable()
 export default class TypeOrmDatabase {
@@ -21,7 +22,7 @@ export default class TypeOrmDatabase {
       password: 'lplXM9W0o67Uz24HKYel',
       database: 'railway',
       logging: true,
-      entities: [User, Session, Product],
+      entities: [User, Session, Product, Cart],
       namingStrategy: new SnakeNamingStrategy(),
     });
 

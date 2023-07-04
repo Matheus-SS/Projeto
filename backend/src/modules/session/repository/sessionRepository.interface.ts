@@ -4,7 +4,7 @@ export interface ISession {
   created_at: Date;
 }
 export interface ISessionFind {
-  id: string;
+  id: number;
   session_id: string;
   email: string;
   username: string;

@@ -12,7 +12,9 @@ export class CreateProductUseCase {
     private productRepository: IProductRepository,
   ) {}
 
-  public async execute(data: CreateProduct): Promise<any> {
+  public async execute(
+    data: CreateProduct,
+  ): Promise<void | ValidationInputError> {
     if (validation.againstNullOrUndefined(data.name.trim())) {
       return new ValidationInputError('Nome do produto obrigatório');
     }
