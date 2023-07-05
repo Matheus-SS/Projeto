@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Get, Res } from '@nestjs/common';
+import { Controller, Inject, Get, Res } from '@nestjs/common';
 import { BaseController } from '@shared/baseController';
 import { InterfaceQuery } from '@shared/query.interface';
 import { LIST_PRODUCT_QUERY_PROVIDER, PRODUCT_ROUTE } from '@src/constants';
