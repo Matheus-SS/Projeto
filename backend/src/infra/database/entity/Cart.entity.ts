@@ -3,7 +3,7 @@ import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('tbl_cart')
 export class Cart extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({
     nullable: false,

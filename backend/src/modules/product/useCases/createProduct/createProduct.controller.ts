@@ -4,11 +4,11 @@ import {
   CREATE_PRODUCT_USE_CASE_PROVIDER,
   PRODUCT_ROUTE,
 } from '@src/constants';
-import { CreateProductUseCase } from './createProductUseCase';
 import { CreateProduct } from '@modules/product/dto/createProductDTO';
 import { Response } from 'express';
 import { ValidationInputError } from '@shared/validationError';
 import { InterfaceUseCase } from '@shared/useCase.interface';
+
 @Controller(PRODUCT_ROUTE)
 export class CreateProductController extends BaseController {
   constructor(

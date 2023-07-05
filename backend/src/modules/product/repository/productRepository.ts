@@ -32,9 +32,17 @@ export class ProductRepository implements IProductRepository {
     await this.product.insert(product);
   }
 
-  async list(): Promise<IProduct[]> {
+  public async list(): Promise<IProduct[]> {
     return this.product.query(`
       SELECT * FROM tbl_product
     `);
+  }
+
+  public async findById(id: string): Promise<IProduct[]> {
+    return this.product.find({
+      where: {
+        id: id,
+      },
+    });
   }
 }

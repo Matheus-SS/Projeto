@@ -1,12 +1,13 @@
 import { DatabaseModule } from '@infra/database/database.module';
 import { Module } from '@nestjs/common';
 import { CartRepositoryModule } from './repository/cartRepository.module';
-import { AddToCartUseCaseProvider } from './useCases/addToCart/addToCart.provider';
-import { AddToCartController } from './useCases/addToCart/addToCart.controller';
+import { AddUpdateCartUseCaseProvider } from './useCases/addCart/addCart.provider';
+import { AddCartController } from './useCases/addCart/addCart.controller';
+import { ProductRepositoryModule } from '@modules/product/repository/productRepository.module';
 
 @Module({
-  imports: [DatabaseModule, CartRepositoryModule],
-  providers: [AddToCartUseCaseProvider],
-  controllers: [AddToCartController],
+  imports: [DatabaseModule, CartRepositoryModule, ProductRepositoryModule],
+  providers: [AddUpdateCartUseCaseProvider],
+  controllers: [AddCartController],
 })
 export class CartModule {}
