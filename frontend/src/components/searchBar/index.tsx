@@ -1,6 +1,5 @@
 import React, { FormEvent } from 'react';
 import { FormSearchBar, InputSearchBar } from './styles';
-
 type SearchBarProps = {
   onSubmit(text: string): void;
 };

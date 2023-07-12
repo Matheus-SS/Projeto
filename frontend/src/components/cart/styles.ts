@@ -7,7 +7,7 @@ export const ContainerCart = styled.div`
 
 export const ContainerCartTitle = styled.div`
   p {
-    font-size: ${size.font.medium}px;
+    font-size: ${size.font.extra_large}px;
     font-weight: bold;
     color: ${color.fonts.primary};
   }

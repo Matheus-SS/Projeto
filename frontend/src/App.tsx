@@ -3,9 +3,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
-  Route,
   Navigate,
-  RouteProps,
 } from 'react-router-dom';
 import { Cart } from './components/cart';
 import { Sidebar } from './components/sidebar';
@@ -19,6 +17,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Profile2 } from './pages/profile2';
 import { AuthProvider, useAuth } from './hook/useAuth';
+import { CartProvider, useCart } from './hook/useCart';
 
 interface IRouteProps {
   element: React.ReactElement;
@@ -44,13 +43,12 @@ const PublicRoute: React.FC<IRouteProps> = ({ element }) => {
   }
 };
 const AppLayout = () => {
-  const { isFetchingSession } = useAuth();
-  return isFetchingSession ? (
-    <div>carregando...</div>
-  ) : (
-    <Grid>
+  const { isOpen } = useCart();
+  return (
+    <Grid fullCart={isOpen}>
       <Sidebar />
       <Outlet />
+      <Cart />
     </Grid>
   );
 };
@@ -81,7 +79,9 @@ export const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <CartProvider>
+          <RouterProvider router={router} />
+        </CartProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={true} />
     </QueryClientProvider>

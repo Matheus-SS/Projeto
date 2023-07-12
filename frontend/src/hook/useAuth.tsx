@@ -1,14 +1,7 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQuery,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import React, { PropsWithChildren, useState } from 'react';
-import { getSession, logout } from '../services/user';
-import { useCookies } from 'react-cookie';
+import { getSession } from '../services/user';
 import { AxiosError } from 'axios';
-import { toastError } from '../lib/toast';
-import { useNavigate } from 'react-router-dom';
 interface IUser {
   email: string;
   username: string;
@@ -33,8 +26,7 @@ const AuthContext = React.createContext<IAuthContext>({} as IAuthContext);
 type ErrorType = {
   message: string;
 };
-// nao tem cookies e tenho usuario = faz nada
-// tenho cookie e nao tenho usuario = busca
+
 export function AuthProvider({ children }: PropsWithChildren) {
   const [allowFetch, setAllowFetch] = useState<boolean>(true);
   const [user, setUser] = React.useState<IUser>({

@@ -12,53 +12,76 @@ import {
   HiOutlineLogin,
   HiOutlineUserAdd,
   HiOutlineLogout,
+  HiShoppingCart,
 } from 'react-icons/hi';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { logout } from '../../services/user';
-import { useCookies } from 'react-cookie';
 import { toastError } from '../../lib/toast';
+import { getMyCart } from '../../services/cart';
+import { useCart } from '../../hook/useCart';
+import { AxiosError } from 'axios';
 type NavItemsType = {
   id: number;
   text: string;
   path: string;
   icon: JSX.Element;
 };
-export const Sidebar: React.FC = () => {
-  const NAVBAR_DATA_PUBLIC = [
-    {
-      id: 1,
-      text: 'Home',
-      path: path.HOME,
-      icon: <HiHome size={size.icon.medium} />,
-    },
-    {
-      id: 3,
-      text: 'Login',
-      path: path.LOGIN,
-      icon: <HiOutlineLogin size={size.icon.medium} />,
-    },
-    {
-      id: 4,
-      text: 'Cadastre-se',
-      path: path.SIGNUP,
-      icon: <HiOutlineUserAdd size={size.icon.medium} />,
-    },
-  ];
 
-  const NAVBAR_DATA_PRIVATE = [
-    {
-      id: 1,
-      text: 'Home',
-      path: path.HOME,
-      icon: <HiHome size={size.icon.medium} />,
-    },
-    {
-      id: 2,
-      text: 'Profile',
-      path: path.PROFILE,
-      icon: <HiOutlineIdentification size={size.icon.medium} />,
-    },
-  ];
+type CartType = {
+  id: number;
+  name: string;
+  quantity: number;
+  image: string;
+  price: number;
+};
+
+type ErrorType = {
+  message: string;
+};
+
+const NAVBAR_DATA_PUBLIC = [
+  {
+    id: 1,
+    text: 'Home',
+    path: path.HOME,
+    icon: <HiHome size={size.icon.medium} />,
+  },
+  {
+    id: 3,
+    text: 'Login',
+    path: path.LOGIN,
+    icon: <HiOutlineLogin size={size.icon.medium} />,
+  },
+  {
+    id: 4,
+    text: 'Cadastre-se',
+    path: path.SIGNUP,
+    icon: <HiOutlineUserAdd size={size.icon.medium} />,
+  },
+];
+
+const NAVBAR_DATA_PRIVATE = [
+  {
+    id: 1,
+    text: 'Home',
+    path: path.HOME,
+    icon: <HiHome size={size.icon.medium} />,
+  },
+  {
+    id: 2,
+    text: 'Profile',
+    path: path.PROFILE,
+    icon: <HiOutlineIdentification size={size.icon.medium} />,
+  },
+  // {
+  //   id: 3,
+  //   text: 'Cart',
+  //   path: '/',
+  //   icon: <HiShoppingCart size={size.icon.medium} />,
+  // },
+];
+
+export const Sidebar: React.FC = () => {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
@@ -87,6 +110,24 @@ export const Sidebar: React.FC = () => {
     mutation.mutate();
   };
 
+  const { setCart, setIsOpen, isOpen } = useCart();
+  const { refetch } = useQuery({
+    queryKey: ['getMyCart'],
+    queryFn: getMyCart,
+    enabled: false,
+    onSuccess: (data: CartType[]) => {
+      setCart(data);
+      console.log(data);
+      setIsOpen(!isOpen);
+    },
+    onError: (error: AxiosError<ErrorType>) => {
+      console.log('error', error);
+    },
+  });
+
+  function openCart() {
+    refetch();
+  }
   const NAVBAR = user.email ? NAVBAR_DATA_PRIVATE : NAVBAR_DATA_PUBLIC;
   return (
     <Container>
@@ -107,6 +148,24 @@ export const Sidebar: React.FC = () => {
               </NavLink>
             </IconListItem>
           ))}
+          {user.email && (
+            <IconListItem
+              style={{
+                marginBottom: '20px',
+              }}
+            >
+              <button
+                style={{
+                  color: color.fonts.secondary,
+                  listStyle: 'none',
+                }}
+                onClick={openCart}
+              >
+                <HiShoppingCart size={size.font.large} />
+                <p>Cart</p>
+              </button>
+            </IconListItem>
+          )}
         </IconList>
       </IconListContainer>
 
