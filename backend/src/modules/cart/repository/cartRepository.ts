@@ -31,12 +31,48 @@ export class CartRepository implements ICartRepository {
   }
 
   public async find(data: CartFilter): Promise<ICart[]> {
-    return this.cart.find({
-      where: {
-        user_id: data.user_id,
-        product_id: data.product_id,
-      },
-    });
+    let query = '';
+    const paramenters = [];
+    if (data.user_id) {
+      query = `where A.user_id = $1`;
+      paramenters.push(data.user_id);
+    } else {
+      query = '';
+    }
+
+    if (data.product_id && data.user_id) {
+      query += `AND B.id = $2`;
+      paramenters.push(data.product_id);
+    } else if (data.product_id) {
+      query = `where B.id = $1`;
+      paramenters.push(data.product_id);
+    } else {
+      query += '';
+    }
+
+    return this.cart.query(
+      `
+      select
+        A.id as id,
+        B.id as product_id,
+        A.user_id as user_id,
+        A.quantity as quantity,
+        B.price as price,
+        B.image as image,
+        B.name as name,
+        A.created_at as created_at,
+        A.updated_at as updated_at
+      from
+        tbl_cart A
+      join 
+        tbl_product B 
+      on
+        A.product_id = B.id
+       ${query}
+      order by created_at
+    `,
+      paramenters,
+    );
   }
 
   public async update(data: UpdateCart): Promise<void> {

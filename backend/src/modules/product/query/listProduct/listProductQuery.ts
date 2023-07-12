@@ -11,6 +11,15 @@ export class ListProductQuery {
   ) {}
 
   public async execute(): Promise<IListProduct[]> {
-    return this.productRepository.list();
+    const result = await this.productRepository.list();
+    return result.map((res) => ({
+      id: res.id,
+      created_at: res.created_at,
+      description: res.description,
+      image: res.image,
+      name: res.name,
+      price: res.price,
+      updated_at: res.updated_at,
+    }));
   }
 }

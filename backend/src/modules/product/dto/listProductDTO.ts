@@ -4,7 +4,6 @@ export interface IListProduct {
   description: string;
   image: string;
   price: number;
-  quantity: number;
   created_at: Date;
   updated_at: Date;
 }
