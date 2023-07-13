@@ -5,6 +5,7 @@ import { Session } from './entity/Session.entity';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { Product } from './entity/Product.entity';
 import { Cart } from './entity/Cart.entity';
+import { Log } from './entity/Log.entity';
 
 @Injectable()
 export default class TypeOrmDatabase {
@@ -22,7 +23,7 @@ export default class TypeOrmDatabase {
       password: 'lplXM9W0o67Uz24HKYel',
       database: 'railway',
       logging: true,
-      entities: [User, Session, Product, Cart],
+      entities: [User, Session, Product, Cart, Log],
       namingStrategy: new SnakeNamingStrategy(),
     });
 

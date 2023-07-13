@@ -8,11 +8,24 @@ import { UserModule } from './modules/user/useCases/user.module';
 import { SessionModule } from '@modules/session/session.module';
 import { ProductModule } from '@modules/product/product.module';
 import { CartModule } from '@modules/cart/cart.module';
+import { LoggingInterceptor } from '@shared/interceptors/logging.interceptor';
+import { LogRepositoryModule } from '@infra/repository/log/logRepository.module';
 
 @Module({
-  imports: [SessionModule, UserModule, ProductModule, CartModule],
+  imports: [
+    SessionModule,
+    UserModule,
+    ProductModule,
+    CartModule,
+    LogRepositoryModule,
+  ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: 'APP_INTERCEPTOR',
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
