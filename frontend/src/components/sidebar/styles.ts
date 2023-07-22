@@ -9,6 +9,9 @@ export const IconListContainer = styled.nav`
 
 export const IconList = styled.ul`
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 export const IconListItem = styled.li`
@@ -19,6 +22,13 @@ export const IconListItem = styled.li`
     flex-direction: column;
     align-items: center;
     text-decoration: none;
+  }
+  .button-cart {
+    color: ${color.fonts.secondary};
+    list-style: none;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
   }
 `;
 

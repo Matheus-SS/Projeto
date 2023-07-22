@@ -9,28 +9,14 @@ import {
 import { HiTrash } from 'react-icons/hi';
 import { Container, Wrapper } from '../../shared-styles';
 import { useCart } from '../../hook/useCart';
-type CartType = {
-  id: number;
-  name: string;
-  quantity: number;
-  imageUrl: string;
-  price: number;
-};
+import { Loader } from '../loader';
+
 const imageNotFoundUrl =
   'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
 
-const ORDER = [
-  {
-    id: 2,
-    name: 'pizza brotinho',
-    price: 20,
-    quantity: 2,
-    imageUrl: imageNotFoundUrl,
-  },
-];
 export const Cart: React.FC = () => {
-  const { cart, setCart } = useCart();
-
+  const { cart, setCart, getMyCartQuery } = useCart();
+  console.log(cart);
   const handleIncrementCart = (id: number) => {
     setCart((prevState) => {
       return prevState.map((product) => {
@@ -71,49 +57,67 @@ export const Cart: React.FC = () => {
             </ContainerCartTitle>
 
             <ContainerOrder>
-              <ul>
-                {cart.length > 0 ? (
-                  cart.map((order) => (
-                    <li key={order.id}>
-                      <div className="card-order">
-                        <img
-                          src={order.image || imageNotFoundUrl}
-                          alt={order.name}
-                          className="card-order-image"
-                        />
-                        <div className="card-order-body">
-                          <p>{order.name}</p>
-                          <p>{order.price}</p>
-                          <div className="card-order-body-quantity">
-                            <span>
-                              <button
-                                className="card-order-body-quantity-btn-minus"
-                                onClick={() => handleDecrementCart(order.id)}
-                              >
-                                -
-                              </button>
-                              {order.quantity}
-                              <button
-                                className="card-order-body-quantity-btn-plus"
-                                onClick={() => handleIncrementCart(order.id)}
-                              >
-                                +
-                              </button>
-                            </span>
+              {getMyCartQuery.isLoading ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '50vh',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Loader />
+                  <Text style={{ marginTop: '15px' }} size={20}>
+                    Carregando
+                  </Text>
+                </div>
+              ) : (
+                <ul>
+                  {cart.length > 0 ? (
+                    cart.map((order) => (
+                      <li key={order.id}>
+                        <div className="card-order">
+                          <img
+                            src={order.image || imageNotFoundUrl}
+                            alt={order.name}
+                            className="card-order-image"
+                          />
+                          <div className="card-order-body">
+                            <p>{order.name}</p>
+                            <p>{order.price}</p>
+                            <div className="card-order-body-quantity">
+                              <span>
+                                <button
+                                  className="card-order-body-quantity-btn-minus"
+                                  onClick={() => handleDecrementCart(order.id)}
+                                >
+                                  -
+                                </button>
+                                {order.quantity}
+                                <button
+                                  className="card-order-body-quantity-btn-plus"
+                                  onClick={() => handleIncrementCart(order.id)}
+                                >
+                                  +
+                                </button>
+                              </span>
+                            </div>
+                          </div>
+                          <div className="card-order-option">
+                            <button>
+                              <HiTrash size={20} />
+                            </button>
                           </div>
                         </div>
-                        <div className="card-order-option">
-                          <button>
-                            <HiTrash size={20} />
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <div>vazio</div>
-                )}
-              </ul>
+                      </li>
+                    ))
+                  ) : (
+                    <div>vazio</div>
+                  )}
+                </ul>
+              )}
             </ContainerOrder>
             <BillOrder>
               <span>

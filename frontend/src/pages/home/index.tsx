@@ -4,30 +4,17 @@ import { Text } from '../../components/Text';
 import { SearchBar } from '../../components/searchBar';
 import { Container } from '../../shared-styles';
 import { useAuth } from '../../hook/useAuth';
-import { useListProduct } from '../../hook/useListProduct';
+import { IProduct, useListProduct } from '../../hook/useListProduct';
 import { HiShoppingCart } from 'react-icons/hi';
 import { size } from '../../constants';
-import { useAddCart } from '../../hook/useCart';
+import { useAddCart, useCart } from '../../hook/useCart';
 import { useNavigate } from 'react-router-dom';
 import { toastError, toastSuccess } from '../../lib/toast';
 import { Toaster } from 'react-hot-toast';
-import { AxiosError } from 'axios';
-
-type ErrorType = {
-  message: string;
-};
+import { Loader } from '../../components/loader';
 
 const imageNotFoundUrl =
   'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
-
-type CartType = {
-  id: number;
-  name: string;
-  quantity: number;
-  description: string;
-  image: string;
-  price: number;
-};
 
 interface AddCart {
   product_id: string;
@@ -35,27 +22,35 @@ interface AddCart {
 }
 
 export const Home: React.FC = () => {
-  const [cartGlobal, setCartGlobal] = React.useState<CartType[]>([]);
   const navigate = useNavigate();
   const { user } = useAuth();
   const handleSubmitSearch = (text: string) => {
     console.log('valor do input', text);
   };
   const { isLoading, data } = useListProduct();
-  const { mutate, isSuccess } = useAddCart<AddCart, string>();
+  const { mutate } = useAddCart<AddCart, string>();
 
-  const handleAddToCart = (value: AddCart) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (value: IProduct) => {
     if (!user.email) {
       navigate('/login');
       return;
     }
     mutate(
       {
-        product_id: value.product_id,
-        quantity: value.quantity,
+        product_id: value.id,
+        quantity: 1,
       },
       {
         onSuccess: () => {
+          addToCart({
+            id: value.id,
+            name: value.name,
+            image: value.image,
+            price: value.price,
+            quantity: 1,
+          });
           toastSuccess('Item adicionado ao carrinho');
         },
         onError(error) {
@@ -66,7 +61,6 @@ export const Home: React.FC = () => {
       }
     );
   };
-
   return (
     <Container>
       <Toaster position="top-right" reverseOrder={false} />
@@ -78,7 +72,21 @@ export const Home: React.FC = () => {
           <h3>Escolha sua pizza</h3>
 
           {isLoading ? (
-            'carregando'
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '50vh',
+                textAlign: 'center',
+              }}
+            >
+              <Loader />
+              <Text style={{ marginTop: '15px' }} size={25}>
+                Carregando
+              </Text>
+            </div>
           ) : (
             <ContainerProduct>
               <ul>
@@ -103,12 +111,7 @@ export const Home: React.FC = () => {
                         <span>
                           <button
                             className="card-product-add-cart-button"
-                            onClick={() =>
-                              handleAddToCart({
-                                product_id: value.id,
-                                quantity: 1,
-                              })
-                            }
+                            onClick={() => handleAddToCart(value)}
                           >
                             <HiShoppingCart size={size.icon.medium} />
                           </button>

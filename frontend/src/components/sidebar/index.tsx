@@ -110,23 +110,13 @@ export const Sidebar: React.FC = () => {
     mutation.mutate();
   };
 
-  const { setCart, setIsOpen, isOpen } = useCart();
-  const { refetch } = useQuery({
-    queryKey: ['getMyCart'],
-    queryFn: getMyCart,
-    enabled: false,
-    onSuccess: (data: CartType[]) => {
-      setCart(data);
-      console.log(data);
-      setIsOpen(!isOpen);
-    },
-    onError: (error: AxiosError<ErrorType>) => {
-      console.log('error', error);
-    },
-  });
+  const { setCart, setIsOpen, isOpen, getMyCartQuery } = useCart();
 
   function openCart() {
-    refetch();
+    setIsOpen(!isOpen);
+    if (isOpen === false) {
+      getMyCartQuery.refetch();
+    }
   }
   const NAVBAR = user.email ? NAVBAR_DATA_PRIVATE : NAVBAR_DATA_PUBLIC;
   return (
@@ -149,19 +139,9 @@ export const Sidebar: React.FC = () => {
             </IconListItem>
           ))}
           {user.email && (
-            <IconListItem
-              style={{
-                marginBottom: '20px',
-              }}
-            >
-              <button
-                style={{
-                  color: color.fonts.secondary,
-                  listStyle: 'none',
-                }}
-                onClick={openCart}
-              >
-                <HiShoppingCart size={size.font.large} />
+            <IconListItem>
+              <button className="button-cart" onClick={openCart}>
+                <HiShoppingCart size={size.icon.medium} />
                 <p>Cart</p>
               </button>
             </IconListItem>
@@ -182,7 +162,7 @@ export const Sidebar: React.FC = () => {
               listStyle: 'none',
             }}
           >
-            <HiOutlineLogout size={size.font.large} onClick={logoutUser} />
+            <HiOutlineLogout size={size.icon.medium} onClick={logoutUser} />
             <p>Sair</p>
           </NavLink>
         </IconListItem>

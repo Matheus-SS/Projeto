@@ -15,9 +15,10 @@ import { Signup } from './pages/signup';
 import { Grid } from './shared-styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Profile2 } from './pages/profile2';
 import { AuthProvider, useAuth } from './hook/useAuth';
 import { CartProvider, useCart } from './hook/useCart';
+import { Loader } from './components/loader';
+import { Text } from './components/Text';
 
 interface IRouteProps {
   element: React.ReactElement;
@@ -26,25 +27,36 @@ interface IRouteProps {
 const queryClient = new QueryClient();
 
 const PrivateRoute: React.FC<IRouteProps> = ({ element }) => {
-  const { user, isFetchingSession } = useAuth();
-  if (isFetchingSession) {
-    return <div>carregando</div>;
-  } else {
-    return user.email ? element : <Navigate to="/" replace />;
-  }
+  const { user } = useAuth();
+
+  return user.email ? element : <Navigate to="/" replace />;
 };
 
 const PublicRoute: React.FC<IRouteProps> = ({ element }) => {
-  const { user, isFetchingSession } = useAuth();
-  if (isFetchingSession) {
-    return <div>carregando</div>;
-  } else {
-    return user.email ? <Navigate to="/" replace /> : element;
-  }
+  const { user } = useAuth();
+
+  return user.email ? <Navigate to="/" replace /> : element;
 };
 const AppLayout = () => {
+  const { isFetchingSession } = useAuth();
   const { isOpen } = useCart();
-  return (
+  return isFetchingSession ? (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        textAlign: 'center',
+      }}
+    >
+      <Loader />
+      <Text style={{ marginTop: '15px' }} size={20}>
+        Carregando
+      </Text>
+    </div>
+  ) : (
     <Grid fullCart={isOpen}>
       <Sidebar />
       <Outlet />
@@ -87,11 +99,3 @@ export const App: React.FC = () => {
     </QueryClientProvider>
   );
 };
-
-{
-  /* <Grid fullCart={!!cartGlobal.length}>
-      {sidebar()}
-      {main()}
-      {Cart()}
-    </Grid> */
-}
