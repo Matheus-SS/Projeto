@@ -24,8 +24,7 @@ export class UserRepository implements IUserRepository {
   }
 
   public async findByEmail(email: string): Promise<IUser> {
-    console.log('email');
-    return this.user.findOne({
+    return await this.user.findOne({
       where: {
         email: email,
       },
