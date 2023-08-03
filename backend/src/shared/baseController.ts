@@ -13,7 +13,7 @@ export class BaseController {
     return res.status(409).json({ message: message ? message : 'Conflict' });
   }
 
-  public internalError(res: Response, err: Error | string) {
+  public internalError(res: Response, err?: Error | string) {
     console.log(err);
     return res
       .status(500)

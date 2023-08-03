@@ -8,8 +8,10 @@ import { EmailAlreadyExistsError } from './createUserError';
 import { PASSWORD_HASH_PROVIDER } from '@src/constants';
 import { InterfacePasswordHash } from '@modules/user/provider/passwordHash/passwordHash.interface';
 
-import * as validation from '@shared/util/validation';
 import { ValidationInputError } from '@shared/validationError';
+
+import { z } from 'zod';
+import { ReturnType } from '@shared/returnType';
 
 @Injectable()
 export class CreateUserUseCase
@@ -17,7 +19,10 @@ export class CreateUserUseCase
     InterfaceUseCase<
       CreateUserDTO,
       Promise<
-        CreateUserResponse | EmailAlreadyExistsError | ValidationInputError
+        ReturnType<
+          ValidationInputError | EmailAlreadyExistsError,
+          CreateUserResponse
+        >
       >
     >
 {
@@ -28,60 +33,83 @@ export class CreateUserUseCase
     private encryptService: InterfacePasswordHash,
   ) {}
 
+  public validateInput({ email, password, username }: CreateUserDTO):
+    | {
+        error: ValidationInputError;
+        success: boolean;
+      }
+    | {
+        error?: ValidationInputError;
+        success: boolean;
+      } {
+    const userSchema = z.object({
+      username: z
+        .string({
+          required_error: 'Nome de usuário obrigatório',
+        })
+        .min(4, 'Nome de usuário pelo menos 4 caracteres')
+        .max(15, 'Nome de usuário no máximo 15 caracteres'),
+      email: z
+        .string({
+          required_error: 'Email obrigatório',
+        })
+        .email({
+          message: 'Email inválido',
+        }),
+      password: z
+        .string({
+          required_error: 'Password obrigatório',
+        })
+        .min(6, 'Senha deve ter pelo menos 6 caracteres'),
+    });
+
+    const results = userSchema.safeParse({ username, email, password });
+
+    if (results.success === false) {
+      const { issues } = results.error;
+      return {
+        error: new ValidationInputError(issues[0].message),
+        success: false,
+      };
+    } else {
+      return {
+        success: true,
+      };
+    }
+  }
+
   public async execute({
     email,
     password,
     username,
   }: CreateUserDTO): Promise<
-    CreateUserResponse | EmailAlreadyExistsError | ValidationInputError
+    ReturnType<
+      ValidationInputError | EmailAlreadyExistsError,
+      CreateUserResponse
+    >
   > {
-    if (validation.againstNullOrUndefined(username)) {
-      return new ValidationInputError('Nome de usuário obrigatório');
-    }
-
-    if (validation.againstNullOrUndefined(email)) {
-      return new ValidationInputError('Email obrigatório');
-    }
-
-    if (validation.againstNullOrUndefined(password)) {
-      return new ValidationInputError('password obrigatório');
-    }
-
-    if (username.length < 4) {
-      return new ValidationInputError(
-        'Nome de usuário pelo menos 4 caracteres',
-      );
-    }
-
-    if (username.length > 15) {
-      return new ValidationInputError(
-        'Nome de usuário no máximo 15 caracteres',
-      );
-    }
-
-    if (password.length < 6) {
-      return new ValidationInputError('Senha deve ter pelo menos 6 caracteres');
-    }
-
-    if (!validation.isValidEmail(email)) {
-      return new ValidationInputError('Email inválido');
-    }
+    this.validateInput({ email, password, username });
 
     const user = await this.userRepository.findByEmail(email);
 
     if (user) {
-      return new EmailAlreadyExistsError(email);
+      return { error: new EmailAlreadyExistsError(email), success: false };
     }
 
     const passwordHashed = await this.encryptService.generateHash(password);
+
     await this.userRepository.create({
       email,
       password: passwordHashed,
       username,
     });
+
     return {
-      email,
-      username,
+      data: {
+        email,
+        username,
+      },
+      success: true,
     };
   }
 }

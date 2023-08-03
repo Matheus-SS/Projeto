@@ -6,6 +6,7 @@ import { Response } from 'express';
 import { BaseController } from '@shared/baseController';
 import { ValidationInputError } from '@shared/validationError';
 import { CreateUserDTO, CreateUserResponse } from './createUserTypes';
+import { ReturnType } from '@shared/returnType';
 
 @Controller(USER_ROUTE)
 export class CreateUserController extends BaseController {
@@ -14,7 +15,10 @@ export class CreateUserController extends BaseController {
     private createUser: InterfaceUseCase<
       CreateUserDTO,
       Promise<
-        CreateUserResponse | EmailAlreadyExistsError | ValidationInputError
+        ReturnType<
+          ValidationInputError | EmailAlreadyExistsError,
+          CreateUserResponse
+        >
       >
     >,
   ) {
@@ -33,16 +37,19 @@ export class CreateUserController extends BaseController {
         username: username.trim(),
       });
 
-      if (result instanceof ValidationInputError) {
-        return this.badRequest(response, result.message);
+      if (result.success === false) {
+        switch (result.error.name) {
+          case 'EmailAlreadyExistsError':
+            return this.badRequest(response, result.error.message);
+          case 'ValidationInputError':
+            return this.badRequest(response, result.error.message);
+        }
+      } else {
+        return this.created(response);
       }
-      if (result instanceof EmailAlreadyExistsError) {
-        return this.conflict(response, result.message);
-      }
-
-      return this.created(response);
     } catch (error: any) {
-      return this.badRequest(response, error.message);
+      console.error('CreateUserController', error);
+      return this.internalError(response, error.message);
     }
   }
 }

@@ -63,31 +63,28 @@ describe('Create User Use Case', () => {
       username: 'abcabc',
     });
 
-    if (user instanceof ValidationInputError) {
-      throw user;
-    }
-    if (user instanceof EmailAlreadyExistsError) {
-      throw user;
-    }
-    expect(user.email).toBe('teste@gmail.com');
-    expect(user.username).toBe('abcabc');
+    expect(user.success).toBe(true);
+    if (!user.success) return;
+    expect(user.data.email).toBe('teste@gmail.com');
+    expect(user.data.username).toBe('abcabc');
   });
 
   it('Throw error if user exists', async () => {
     await service.execute({
-      email: 'teste2@gmai.com',
+      email: 'teste2@gmail.com',
       password: '123456',
       username: 'abc123',
     });
 
     const user2 = await service.execute({
-      email: 'teste2@gmai.com',
+      email: 'teste2@gmail.com',
       password: '123456',
       username: 'abc123',
     });
 
-    if (user2 instanceof EmailAlreadyExistsError) {
-      expect(user2.name).toBe('EmailAlreadyExistsError');
+    expect(user2.success).toBe(false);
+    if (user2.success === false) {
+      expect(user2.error.name).toBe('EmailAlreadyExistsError');
     }
   });
 });
