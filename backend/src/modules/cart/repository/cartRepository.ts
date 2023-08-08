@@ -41,7 +41,7 @@ export class CartRepository implements ICartRepository {
     }
 
     if (data.product_id && data.user_id) {
-      query += `AND B.id = $2`;
+      query += ` AND B.id = $2`;
       paramenters.push(data.product_id);
     } else if (data.product_id) {
       query = `where B.id = $1`;

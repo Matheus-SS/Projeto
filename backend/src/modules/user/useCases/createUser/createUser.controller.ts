@@ -32,9 +32,9 @@ export class CreateUserController extends BaseController {
   ): Promise<Response> {
     try {
       const result = await this.createUser.execute({
-        email: email.trim(),
-        password: password.trim(),
-        username: username.trim(),
+        email: email,
+        password: password,
+        username: username,
       });
 
       if (result.success === false) {

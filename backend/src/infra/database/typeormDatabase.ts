@@ -17,11 +17,11 @@ export default class TypeOrmDatabase {
   public init(): void {
     this.connection = new DataSource({
       type: 'postgres',
-      host: 'containers-us-west-138.railway.app',
-      port: 7619,
-      username: 'postgres',
-      password: 'lplXM9W0o67Uz24HKYel',
-      database: 'railway',
+      host: 'silly.db.elephantsql.com',
+      port: 5432,
+      username: 'rdayqmiv',
+      password: 'L7GABvzWbfSKA-Wlw2X6rcox1k5lJUf2',
+      database: 'rdayqmiv',
       logging: true,
       entities: [User, Session, Product, Cart, Log],
       namingStrategy: new SnakeNamingStrategy(),
