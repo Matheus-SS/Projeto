@@ -15,17 +15,24 @@ export class BaseController {
 
   public internalError(res: Response, err?: Error | string) {
     console.log(err);
-    return res
-      .status(500)
-      .json({ message: err ? err.toString() : 'Internal Server Error' });
+    return res.status(500).json({
+      name: 'InternalServerError',
+      message: err ? err.toString() : 'Internal Server Error',
+    });
   }
 
-  public badRequest(res: Response, message?: string) {
-    return res.status(400).json({ message: message ? message : 'Bad Request' });
+  public badRequest(res: Response, message?: string, error?: Error) {
+    return res.status(400).json({
+      name: error.name || 'BadRequest',
+      message: message ? message : 'Bad Request',
+    });
   }
 
-  public notFound(res: Response, message?: string) {
-    return res.status(404).json({ message: message ? message : 'Not Found' });
+  public notFound(res: Response, message?: string, error?: Error) {
+    return res.status(404).json({
+      name: error.name || 'NotFound',
+      message: message ? message : 'Not Found',
+    });
   }
 
   public unAuthorized(res: Response, message?: string) {

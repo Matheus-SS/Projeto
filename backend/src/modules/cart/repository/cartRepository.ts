@@ -4,6 +4,7 @@ import { DATABASE_TYPEORM } from '@src/constants';
 import {
   CartFilter,
   CreateCart,
+  DeleteCart,
   ICart,
   ICartRepository,
   UpdateCart,
@@ -86,5 +87,12 @@ export class CartRepository implements ICartRepository {
         updated_at: new Date(),
       },
     );
+  }
+
+  public async delete(data: DeleteCart): Promise<void> {
+    await this.cart.delete({
+      product_id: data.product_id,
+      user_id: data.user_id,
+    });
   }
 }

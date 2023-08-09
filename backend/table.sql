@@ -42,7 +42,7 @@ create table tbl_logs(
 	request text,
 	path text,
 	status_code int,
-	method char(4),
+	method char(6),
 	response_time float,
 	response text,
 	created_at timestamptz not null
