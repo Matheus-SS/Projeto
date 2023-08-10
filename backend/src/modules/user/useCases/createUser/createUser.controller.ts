@@ -24,46 +24,17 @@ export class CreateUserController {
     >,
   ) {}
 
-  // @Post()
-  // public async executeImpl(
-  //   @Body() { email, password, username }: CreateUserDTO,
-  //   @Res() response: Response,
-  // ): Promise<Response> {
-  //   try {
-  //     const result = await this.createUser.execute({
-  //       email: email,
-  //       password: password,
-  //       username: username,
-  //     });
-
-  //     if (result.success === false) {
-  //       switch (result.error.name) {
-  //         case 'EmailAlreadyExistsError':
-  //           return this.badRequest(response, result.error.message);
-  //         case 'ValidationInputError':
-  //           return this.badRequest(response, result.error.message);
-  //       }
-  //     } else {
-  //       return this.created(response);
-  //     }
-  //   } catch (error: any) {
-  //     console.error('CreateUserController', error);
-  //     return this.internalError(response, error.message);
-  //   }
-  // }
-
   @TsRestHandler(contract.createUser)
   async execImpl() {
     return tsRestHandler(contract.createUser, async ({ body }) => {
-      console.log(body);
-      const result = await this.createUser.execute({
-        email: body.email,
-        password: body.password,
-        username: body.username,
-      });
-      if (result.success === false) {
-        switch (result.error.name) {
-          case 'EmailAlreadyExistsError':
+      try {
+        const result = await this.createUser.execute({
+          email: body.email,
+          password: body.password,
+          username: body.username,
+        });
+        if (result.success === false) {
+          if (result.error.name === 'EmailAlreadyExistsError') {
             return {
               body: {
                 name: 'EmailAlreadyExistsError',
@@ -71,9 +42,27 @@ export class CreateUserController {
               },
               status: 409,
             };
+          } else if (result.error.name === 'ValidationInputError') {
+            return {
+              body: {
+                name: 'ValidationInputError',
+                message: result.error.message,
+              },
+              status: 400,
+            };
+          }
+        } else {
+          return { body: 'ok', status: 201 };
         }
-      } else {
-        return { body: 'ok', status: 201 };
+      } catch (error: any) {
+        console.log(error);
+        return {
+          body: {
+            name: 'InternalServerError',
+            message: error.toString(),
+          },
+          status: 500,
+        };
       }
     });
   }

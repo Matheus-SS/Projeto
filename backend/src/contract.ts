@@ -2,6 +2,11 @@ import { EmailAlreadyExistsError } from '@modules/user/useCases/createUser/creat
 import { initContract } from '@ts-rest/core';
 import { Response } from 'express';
 import { z } from 'zod';
+import {
+  EMAIL_ALREADY_EXISTS_ERROR,
+  INTERNAL_SERVER_ERROR,
+  VALIDATION_INPUT_ERROR,
+} from './constants.error';
 
 const c = initContract();
 
@@ -33,8 +38,16 @@ export const contract = c.router(
       path: '/user',
       responses: {
         201: z.literal('ok'),
+        400: z.object({
+          name: z.literal(VALIDATION_INPUT_ERROR),
+          message: z.string(),
+        }),
         409: z.object({
-          name: z.literal('EmailAlreadyExistsError'),
+          name: z.literal(EMAIL_ALREADY_EXISTS_ERROR),
+          message: z.string(),
+        }),
+        500: z.object({
+          name: z.literal(INTERNAL_SERVER_ERROR),
           message: z.string(),
         }),
       },
