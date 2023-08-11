@@ -10,8 +10,17 @@ export class InputInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
 
     Object.keys(request.body).forEach((value) => {
-      console.log(request.body[value]);
-      request.body[value] = this.escapeHtml(request.body[value]);
+      const inputValue = request.body[value];
+      // const condition =
+      //   inputValue !== undefined ||
+      //   inputValue !== null ||
+      //   inputValue !== '' ||
+      //   (typeof inputValue === 'string' && !inputValue);
+
+      // console.log('INPUT...', condition);
+      // console.log('INPUT...', typeof inputValue === 'string' && !inputValue);
+
+      request.body[value] = this.escapeHtml(inputValue);
     });
     // this.escapeHtml(request.params);
     // this.escapeHtml(request.query);

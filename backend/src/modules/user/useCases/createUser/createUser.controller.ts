@@ -8,9 +8,9 @@ import { BaseController } from '@shared/baseController';
 import { ValidationInputError } from '@shared/validationError';
 import { CreateUserDTO, CreateUserResponse } from './createUserTypes';
 import { ReturnType } from '@shared/returnType';
-import { contract } from '@src/contract';
-@Controller()
-export class CreateUserController {
+
+@Controller(USER_ROUTE)
+export class CreateUserController extends BaseController {
   constructor(
     @Inject(CREATE_USER_USE_CASE_PROVIDER)
     private createUser: InterfaceUseCase<
@@ -22,59 +22,39 @@ export class CreateUserController {
         >
       >
     >,
-  ) {}
+  ) {
+    super();
+  }
 
-  // @Post()
-  // public async executeImpl(
-  //   @Body() { email, password, username }: CreateUserDTO,
-  //   @Res() response: Response,
-  // ): Promise<Response> {
-  //   try {
-  //     const result = await this.createUser.execute({
-  //       email: email,
-  //       password: password,
-  //       username: username,
-  //     });
-
-  //     if (result.success === false) {
-  //       switch (result.error.name) {
-  //         case 'EmailAlreadyExistsError':
-  //           return this.badRequest(response, result.error.message);
-  //         case 'ValidationInputError':
-  //           return this.badRequest(response, result.error.message);
-  //       }
-  //     } else {
-  //       return this.created(response);
-  //     }
-  //   } catch (error: any) {
-  //     console.error('CreateUserController', error);
-  //     return this.internalError(response, error.message);
-  //   }
-  // }
-
-  @TsRestHandler(contract.createUser)
-  async execImpl() {
-    return tsRestHandler(contract.createUser, async ({ body }) => {
-      console.log(body);
+  @Post()
+  public async executeImpl(
+    @Body() { email, password, username }: CreateUserDTO,
+    @Res() response: Response,
+  ): Promise<Response> {
+    try {
       const result = await this.createUser.execute({
-        email: body.email,
-        password: body.password,
-        username: body.username,
+        email: email,
+        password: password,
+        username: username,
       });
+
       if (result.success === false) {
         switch (result.error.name) {
           case 'EmailAlreadyExistsError':
-            return {
-              body: {
-                name: 'EmailAlreadyExistsError',
-                message: result.error.message,
-              },
-              status: 409,
-            };
+            return this.conflict(response, result.error.message, result.error);
+          case 'ValidationInputError':
+            return this.badRequest(
+              response,
+              result.error.message,
+              result.error,
+            );
         }
       } else {
-        return { body: 'ok', status: 201 };
+        return this.created(response);
       }
-    });
+    } catch (error: any) {
+      console.error('CreateUserController', error);
+      return this.internalError(response, error.message);
+    }
   }
 }

@@ -12,23 +12,11 @@ async function bootstrap() {
       origin: 'http://localhost:8080',
     },
   });
-  const document = generateOpenApi(
-    contract,
-    {
-      info: {
-        title: 'Projeto API',
-        version: '1.0.0',
-      },
-    },
-    {
-      setOperationId: true,
-    },
-  );
 
-  SwaggerModule.setup('docs', app, document);
   app.useGlobalInterceptors(new InputInterceptor());
   app.use(helmet());
-  // app.setGlobalPrefix('/api/v1');
+
+  app.setGlobalPrefix('/api/v1');
   await app.listen(3000);
   console.log('Starting on Port', 3000);
 }

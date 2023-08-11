@@ -9,8 +9,11 @@ export class BaseController {
     return res.status(201).json(message ? message : 'ok');
   }
 
-  public conflict(res: Response, message?: string) {
-    return res.status(409).json({ message: message ? message : 'Conflict' });
+  public conflict(res: Response, message?: string, err?: Error) {
+    return res.status(409).json({
+      name: err?.name || 'Conflict',
+      message: message ? message : 'Conflict',
+    });
   }
 
   public internalError(res: Response, err?: Error | string) {
@@ -23,14 +26,14 @@ export class BaseController {
 
   public badRequest(res: Response, message?: string, error?: Error) {
     return res.status(400).json({
-      name: error.name || 'BadRequest',
+      name: error?.name || 'BadRequest',
       message: message ? message : 'Bad Request',
     });
   }
 
   public notFound(res: Response, message?: string, error?: Error) {
     return res.status(404).json({
-      name: error.name || 'NotFound',
+      name: error?.name || 'NotFound',
       message: message ? message : 'Not Found',
     });
   }
