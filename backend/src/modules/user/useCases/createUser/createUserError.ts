@@ -1,5 +1,4 @@
-import { EMAIL_ALREADY_EXISTS_ERROR } from '@src/constants.error';
-type NameType = typeof EMAIL_ALREADY_EXISTS_ERROR;
+type NameType = 'EmailAlreadyExistsError';
 export class EmailAlreadyExistsError extends Error {
   message: string;
   name: NameType;
