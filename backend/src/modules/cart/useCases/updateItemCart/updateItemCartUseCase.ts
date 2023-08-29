@@ -14,6 +14,8 @@ import {
   ProductOutStockError,
 } from './updateItemCartError';
 import { ReturnType } from '@shared/returnType';
+import { z } from 'zod';
+import { ValidationInputError } from '@shared/validationError';
 
 type UpdateItemCart = {
   product_id: string;
@@ -30,18 +32,53 @@ export class UpdateItemCartUseCase {
     private productRepository: IProductRepository,
   ) {}
 
+  // private validateInput() {
+  //   const userSchema =
+  // }
   public async execute({
     product_id,
     user_id,
     type,
   }: UpdateItemCart): Promise<
     ReturnType<
+      | ValidationInputError
       | ProductNotFoundError
       | ProductOutStockError
       | ProductGreaterThanAllowedError,
       ICart[]
     >
   > {
+    const itemSchema = z.object({
+      product_id: z.string({
+        required_error: 'Id do produto é obrigatório',
+      }),
+      user_id: z.number({
+        required_error: 'Id do usuário é obrigatório',
+      }),
+      type: z.enum(['INCREMENT', 'DECREMENT'], {
+        errorMap: (issue) => {
+          switch (issue.code) {
+            case 'invalid_type':
+              return { message: 'Valor deve ser uma string' };
+            case 'invalid_enum_value':
+              return { message: 'Tipo deve ser INCREMENT ou DECREMENT' };
+            default:
+              return { message: 'Tipo inválido' };
+          }
+        },
+      }),
+    });
+
+    const results = itemSchema.safeParse({ product_id, user_id, type });
+
+    if (results.success === false) {
+      const { issues } = results.error;
+      return {
+        error: new ValidationInputError(issues[0].message),
+        success: false,
+      };
+    }
+
     const product = await this.productRepository.findById(product_id);
     if (product.length == 0) {
       return { error: new ProductNotFoundError(), success: false };

@@ -22,22 +22,29 @@ export class SessionController extends BaseController {
     @Res() response: Response,
   ): Promise<Response> {
     if (request.headers.cookie) {
-      try {
-        const token = request.headers.cookie.split('=')[1];
+      const tokenCookie = request.headers.cookie
+        .split('; ')
+        .find((value) => value.startsWith('token='));
 
-        const { id } = verifyJWT(token);
+      if (tokenCookie) {
+        try {
+          const token = tokenCookie.split('=')[1];
+          const { id } = verifyJWT(token);
 
-        const session = await this.findSession.execute(id);
-        return response.status(200).json({
-          user: {
-            username: session[0].username.trim(),
-            email: session[0].email.trim(),
-          },
-        });
-      } catch (error: any) {
-        response.status(401);
-        response.clearCookie('token');
-        response.json({ message: 'Não autorizado, falha no token' });
+          const session = await this.findSession.execute(id);
+          return response.status(200).json({
+            user: {
+              username: session[0].username.trim(),
+              email: session[0].email.trim(),
+            },
+          });
+        } catch (error: any) {
+          response.status(401);
+          response.clearCookie('token');
+          response.json({ message: 'Não autorizado, falha no token' });
+        }
+      } else {
+        return response.status(200).json();
       }
     }
 

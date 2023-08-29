@@ -25,7 +25,9 @@ export class UpdateItemCartController extends BaseController {
       });
 
       if (result.success === false) {
-        if (result.error.name === 'ProductNotFoundError') {
+        if (result.error.name === 'ValidationInputError') {
+          return this.badRequest(response, result.error.message, result.error);
+        } else if (result.error.name === 'ProductNotFoundError') {
           return this.notFound(response, result.error.message, result.error);
         } else if (result.error.name === 'ProductOutStockError') {
           return this.badRequest(response, result.error.message, result.error);
@@ -33,7 +35,19 @@ export class UpdateItemCartController extends BaseController {
           return this.badRequest(response, result.error.message, result.error);
         }
       } else {
-        return this.ok(response, result.data);
+        let mapped = [];
+        if (result.data.length > 0) {
+          mapped = result.data.map((value) => ({
+            id: value.id,
+            user_id: value.user_id,
+            product_id: value.product_id,
+            price: value.price,
+            image: value.image,
+            name: value.name,
+            quantity: value.quantity,
+          }));
+        }
+        return this.ok(response, mapped);
       }
     } catch (error: any) {
       return this.internalError(response, error);

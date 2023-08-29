@@ -17,19 +17,24 @@ export class AuthMiddleware extends BaseController implements NestMiddleware {
   async use(request: Request, response: Response, next: NextFunction) {
     let token;
     if (request.headers.cookie) {
-      try {
-        token = request.headers.cookie.split('=')[1];
+      const tokenCookie = request.headers.cookie
+        .split('; ')
+        .find((cookie) => cookie.startsWith('token='));
+      if (tokenCookie) {
+        try {
+          token = tokenCookie.split('=')[1];
 
-        const { id } = verifyJWT(token);
+          const { id } = verifyJWT(token);
 
-        const session = await this.findSession.execute(id);
+          const session = await this.findSession.execute(id);
 
-        request.userId = session[0].id;
-        next();
-      } catch (error: any) {
-        console.error(error);
-        response.status(401);
-        response.json({ message: 'Não autorizado, falha no token' });
+          request.userId = session[0].id;
+          next();
+        } catch (error: any) {
+          console.error(error);
+          response.status(401);
+          response.json({ message: 'Não autorizado, falha no token' });
+        }
       }
     }
 

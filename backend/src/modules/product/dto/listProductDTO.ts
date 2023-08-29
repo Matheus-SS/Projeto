@@ -4,6 +4,4 @@ export interface IListProduct {
   description: string;
   image: string;
   price: number;
-  created_at: Date;
-  updated_at: Date;
 }

@@ -13,8 +13,8 @@ async function bootstrap() {
     },
   });
 
-  app.useGlobalInterceptors(new InputInterceptor());
   app.use(helmet());
+  app.useGlobalInterceptors(new InputInterceptor());
 
   app.setGlobalPrefix('/api/v1');
   await app.listen(3000);

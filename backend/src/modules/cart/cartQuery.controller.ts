@@ -22,7 +22,19 @@ export class CartQueryController extends BaseController {
     try {
       const result = await this.listMyCart.execute(request.userId);
 
-      return this.ok(response, result);
+      let mapped = [];
+      if (result.length > 0) {
+        mapped = result.map((value) => ({
+          id: value.id,
+          user_id: value.user_id,
+          product_id: value.product_id,
+          price: value.price,
+          image: value.image,
+          name: value.name,
+          quantity: value.quantity,
+        }));
+      }
+      return this.ok(response, mapped);
     } catch (error: any) {
       return this.internalError(response, error.message);
     }
