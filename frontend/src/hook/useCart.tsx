@@ -1,10 +1,15 @@
 import React, { PropsWithChildren } from 'react';
 import { AxiosError } from 'axios';
-import { UseQueryResult, useMutation, useQuery } from '@tanstack/react-query';
-import { addCart, getMyCart } from '../services/cart';
+import {
+  UseQueryResult,
+  UseMutationResult,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
+import { addCart, getMyCart, updateItemCart } from '../services/cart';
 import { IProduct } from './useListProduct';
 
-type CartResponse = {
+export type CartResponse = {
   id: string;
   product_id: string;
   name: string;
@@ -12,8 +17,6 @@ type CartResponse = {
   image: string;
   price: number;
   user_id: number;
-  created_at: Date;
-  updated_at: Date;
 };
 
 type Cart = {
@@ -113,6 +116,15 @@ export function useAddCart<Request, Response>() {
     mutationKey: ['addCart'],
     mutationFn: (data: Request) => {
       return addCart<Request, Response>(data);
+    },
+  });
+}
+
+export function incrementItemCart<Response>() {
+  return useMutation<Response, AxiosError<ErrorType>, string>({
+    mutationKey: ['incrementItemCart'],
+    mutationFn: (id: string) => {
+      return updateItemCart<Response>(id, 'INCREMENT');
     },
   });
 }

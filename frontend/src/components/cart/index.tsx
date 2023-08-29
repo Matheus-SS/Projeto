@@ -8,8 +8,9 @@ import {
 } from './styles';
 import { HiTrash } from 'react-icons/hi';
 import { Container, Wrapper } from '../../shared-styles';
-import { useCart } from '../../hook/useCart';
+import { CartResponse, incrementItemCart, useCart } from '../../hook/useCart';
 import { Loader } from '../loader';
+import { toastError } from '../../lib/toast';
 
 const imageNotFoundUrl =
   'https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png';
@@ -17,17 +18,35 @@ const imageNotFoundUrl =
 export const Cart: React.FC = () => {
   const { cart, setCart, getMyCartQuery } = useCart();
   console.log(cart);
-  const handleIncrementCart = (id: number) => {
-    setCart((prevState) => {
-      return prevState.map((product) => {
-        if (product.id === id) {
-          return { ...product, quantity: product.quantity + 1 };
-        } else return product;
-      });
+  const onSuccess = () => {
+    console.log('foi');
+  };
+
+  const onFailure = () => {
+    console.log('nao foi');
+  };
+
+  const { mutate } = incrementItemCart<CartResponse>();
+  const handleIncrementCart = (id: string) => {
+    mutate(id, {
+      onSuccess: () => {
+        setCart((prevState) => {
+          return prevState.map((product) => {
+            if (product.id === id) {
+              return { ...product, quantity: product.quantity + 1 };
+            } else return product;
+          });
+        });
+      },
+      onError(error) {
+        toastError(
+          error.response?.data.message || 'Erro ao adicionar item ao carrinho'
+        );
+      },
     });
   };
 
-  const handleDecrementCart = (id: number) => {
+  const handleDecrementCart = (id: string) => {
     setCart((prevState) => {
       return prevState
         .map((product) => {

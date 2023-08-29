@@ -11,8 +11,14 @@ export interface IProduct {
   updated_at: Date;
 }
 export const useListProduct = () => {
-  return useQuery<IProduct[]>(['listProduct'], async () => {
-    const response = await listProduct<IProduct[]>();
-    return response;
-  });
+  return useQuery<IProduct[]>(
+    ['listProduct'],
+    async () => {
+      const response = await listProduct<IProduct[]>();
+      return response;
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 };

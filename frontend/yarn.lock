@@ -645,6 +645,16 @@
     "@tanstack/query-core" "4.20.9"
     use-sync-external-store "^1.2.0"
 
+"@ts-rest/core@^3.28.0":
+  version "3.28.0"
+  resolved "https://registry.yarnpkg.com/@ts-rest/core/-/core-3.28.0.tgz#617f4542baf5a25ceff9c9c50ecd7982f8b49442"
+  integrity sha512-m0Wn2DgO3O57dsGT5fqxvF/WNFPx/8/dxbqLMV9TYXwLBgaJG4vDgR7qXVIYss/c5vlHTQ0oB9X+PwxhI3ksMg==
+
+"@ts-rest/react-query@^3.28.0":
+  version "3.28.0"
+  resolved "https://registry.yarnpkg.com/@ts-rest/react-query/-/react-query-3.28.0.tgz#9de76a6bde539aa0724c5d21fdb55586dffd4c2f"
+  integrity sha512-sLMTS48TeDYz5r0sGP2OgmHghe1MvGfHrOWLGjNux13SygDwAWuo5+RMW7YEAtN5CbxJYDIMl6xP86Zc8F2v0g==
+
 "@types/cookie@^0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.3.3.tgz#85bc74ba782fb7aa3a514d11767832b0e3bc6803"

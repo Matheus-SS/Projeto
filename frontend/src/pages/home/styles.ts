@@ -29,7 +29,7 @@ export const ContainerProduct = styled.div`
 
   .card-product {
     box-sizing: border-box;
-    cursor: pointer;
+
     margin-right: 10px;
     margin-top: 10px;
     padding: 10px;

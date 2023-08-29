@@ -24,7 +24,7 @@ interface IRouteProps {
   element: React.ReactElement;
 }
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const PrivateRoute: React.FC<IRouteProps> = ({ element }) => {
   const { user } = useAuth();
