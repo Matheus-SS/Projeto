@@ -47,3 +47,17 @@ create table tbl_logs(
 	response text,
 	created_at timestamptz not null
 );
+
+create table tbl_address(
+	id serial primary key,
+	user_id int not null,
+	cep varchar not null,
+	public_place varchar,
+	complement varchar,
+	neighborhood varchar not null,
+	city varchar not null,
+	uf varchar(2) not null,
+	created_at timestamptz not null default now(),
+	updated_at timestamptz default now(),
+	foreign key (user_id) references tbl_user(id)
+);
