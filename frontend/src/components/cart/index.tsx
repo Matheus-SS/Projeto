@@ -8,7 +8,11 @@ import {
 } from './styles';
 import { HiTrash } from 'react-icons/hi';
 import { Container, Wrapper } from '../../shared-styles';
-import { CartResponse, incrementItemCart, useCart } from '../../hook/useCart';
+import {
+  CartResponse,
+  updateQuantityItemCart,
+  useCart,
+} from '../../hook/useCart';
 import { Loader } from '../loader';
 import { toastError } from '../../lib/toast';
 
@@ -17,47 +21,55 @@ const imageNotFoundUrl =
 
 export const Cart: React.FC = () => {
   const { cart, setCart, getMyCartQuery } = useCart();
-  console.log(cart);
-  const onSuccess = () => {
-    console.log('foi');
-  };
 
-  const onFailure = () => {
-    console.log('nao foi');
-  };
+  const { mutate, isLoading } = updateQuantityItemCart<CartResponse>();
 
-  const { mutate } = incrementItemCart<CartResponse>();
   const handleIncrementCart = (id: string) => {
-    mutate(id, {
-      onSuccess: () => {
-        setCart((prevState) => {
-          return prevState.map((product) => {
-            if (product.id === id) {
-              return { ...product, quantity: product.quantity + 1 };
-            } else return product;
+    mutate(
+      { id: id, type: 'INCREMENT' },
+      {
+        onSuccess: () => {
+          setCart((prevState) => {
+            return prevState.map((product) => {
+              if (product.id === id) {
+                return { ...product, quantity: product.quantity + 1 };
+              } else return product;
+            });
           });
-        });
-      },
-      onError(error) {
-        toastError(
-          error.response?.data.message || 'Erro ao adicionar item ao carrinho'
-        );
-      },
-    });
+        },
+        onError(error) {
+          toastError(
+            error.response?.data.message || 'Erro ao adicionar item ao carrinho'
+          );
+        },
+      }
+    );
   };
 
   const handleDecrementCart = (id: string) => {
-    setCart((prevState) => {
-      return prevState
-        .map((product) => {
-          if (product.id === id) {
-            return { ...product, quantity: product.quantity - 1 };
-          } else return product;
-        })
-        .filter((product) => {
-          return product.quantity !== 0;
-        });
-    });
+    mutate(
+      { id: id, type: 'DECREMENT' },
+      {
+        onSuccess: () => {
+          setCart((prevState) => {
+            return prevState
+              .map((product) => {
+                if (product.id === id) {
+                  return { ...product, quantity: product.quantity - 1 };
+                } else return product;
+              })
+              .filter((product) => {
+                return product.quantity !== 0;
+              });
+          });
+        },
+        onError(error) {
+          toastError(
+            error.response?.data.message || 'Erro ao diminuir item no carrinho'
+          );
+        },
+      }
+    );
   };
 
   const CalculateTotalCart = () => {
@@ -76,7 +88,7 @@ export const Cart: React.FC = () => {
             </ContainerCartTitle>
 
             <ContainerOrder>
-              {getMyCartQuery.isLoading ? (
+            {getMyCartQuery.isLoading || isLoading  ? (
                 <div
                   style={{
                     display: 'flex',

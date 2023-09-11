@@ -13,19 +13,17 @@ import { Login } from './pages/login';
 import { Profile } from './pages/profile';
 import { Signup } from './pages/signup';
 import { Grid } from './shared-styles';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider, useAuth } from './hook/useAuth';
 import { CartProvider, useCart } from './hook/useCart';
 import { Loader } from './components/loader';
 import { Text } from './components/Text';
 
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 interface IRouteProps {
   element: React.ReactElement;
 }
-
 export const queryClient = new QueryClient();
-
 const PrivateRoute: React.FC<IRouteProps> = ({ element }) => {
   const { user } = useAuth();
 

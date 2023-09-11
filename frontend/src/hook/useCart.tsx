@@ -51,7 +51,7 @@ export function CartProvider({ children }: PropsWithChildren) {
   const getMyCartQuery = useQuery({
     queryKey: ['getMyCart'],
     queryFn: getMyCart,
-    enabled: false,
+    refetchOnWindowFocus: false,
     onSuccess: (data: CartResponse[]) => {
       const dataCart = data.map((d) => ({
         id: d.product_id,
@@ -120,11 +120,16 @@ export function useAddCart<Request, Response>() {
   });
 }
 
-export function incrementItemCart<Response>() {
-  return useMutation<Response, AxiosError<ErrorType>, string>({
-    mutationKey: ['incrementItemCart'],
-    mutationFn: (id: string) => {
-      return updateItemCart<Response>(id, 'INCREMENT');
+type UpdateItemCartRequest = {
+  id: string;
+  type: 'INCREMENT' | 'DECREMENT';
+};
+
+export function updateQuantityItemCart<Response>() {
+  return useMutation<Response, AxiosError<ErrorType>, UpdateItemCartRequest>({
+    mutationKey: ['updateItemCart'],
+    mutationFn: (data: UpdateItemCartRequest) => {
+      return updateItemCart<Response>(data.id, data.type);
     },
   });
 }
