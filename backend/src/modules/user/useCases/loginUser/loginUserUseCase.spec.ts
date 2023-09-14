@@ -9,7 +9,8 @@ import { SqliteConfig } from '@shared/sqlite.config';
 import { sleep } from '@shared/util';
 import { SessionRepositoryProvider } from '@modules/session/repository/sessionRepository.provider';
 import { LoginUserUseCase } from './loginUserUseCase';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+import { LoginUserError } from './loginUserError';
+
 describe('Create User Use Case', () => {
   const sqliteConfig = new SqliteConfig();
   let createUserUsecase: CreateUserUseCase;
@@ -40,7 +41,7 @@ describe('Create User Use Case', () => {
     sqliteConfig.executeScript(scriptSql.DELETE_TABLE_SESSION);
     sqliteConfig.executeScript(scriptSql.DELETE_TABLE_USER);
   });
-  it('Deve se logar', async () => {
+  it('Deve conseguir fazer login', async () => {
     await createUserUsecase.execute({
       email: 'teste@gmail.com',
       password: '123456',
@@ -57,5 +58,28 @@ describe('Create User Use Case', () => {
     expect(result).toHaveProperty('user.username');
     expect(result['user']['email']).toBe('teste@gmail.com');
     expect(result['user']['username']).toBe('teste');
+  });
+
+  it('Deve dar erro ao logar com email que não existe', async () => {
+    const result = await loginUserUseCase.execute({
+      email: 'teste1@gmail.com',
+      password: '123456',
+    });
+
+    expect(result).toBeInstanceOf(LoginUserError);
+  });
+
+  it('Deve dar erro ao logar com senha errada', async () => {
+    await createUserUsecase.execute({
+      email: 'teste1@gmail.com',
+      password: '123456',
+      username: 'teste',
+    });
+    const result = await loginUserUseCase.execute({
+      email: 'teste1@gmail.com',
+      password: '1234568',
+    });
+
+    expect(result).toBeInstanceOf(LoginUserError);
   });
 });
