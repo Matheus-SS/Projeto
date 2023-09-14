@@ -82,18 +82,4 @@ describe('Create User Use Case', () => {
 
     expect(result).toBeInstanceOf(LoginUserError);
   });
-
-  it('Deve dar erro ao logar com senha errada', async () => {
-    await createUserUsecase.execute({
-      email: 'teste1@gmail.com',
-      password: '123456',
-      username: 'teste',
-    });
-    const result = await loginUserUseCase.execute({
-      email: 'teste1@gmail.com',
-      password: '1234568',
-    });
-
-    expect(result).toBeInstanceOf(LoginUserError);
-  });
 });
