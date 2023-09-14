@@ -20,9 +20,9 @@ jobs:
     strategy:
       matrix:
         node-version: [16.16.0]
-        
     steps:
-    - uses: actions/checkout@v3
+    - name: CHECKOUT GIT REPOSITORY
+      uses: actions/checkout@v3
     
     - name: Set Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
@@ -30,8 +30,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: INSTALL DEPENDENCIES BACKEND (YARN)
-    - run: yarn install
+      run: yarn install
 
     - name: TEST (JEST)
-    - run: yarn test
+      run: yarn test
     
