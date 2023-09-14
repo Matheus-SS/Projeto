@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserUseCase } from '@modules/user/useCases/createUser/createUserUsecase';
+import { CreateUserUseCase } from '@modules/user/useCases/createUser/createUserUseCase';
 import { UserRepositoryProvider } from '@modules/user/repository/userRespository.provider';
 import { SqliteModule } from '@infra/database/sqlite.module';
 import { scriptSql } from '@src/scriptSqlite';
