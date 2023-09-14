@@ -62,16 +62,16 @@ export class LoginUserUseCase
     }
 
     const passwordMatched = await this.encryptService.comparePassword(
-      user.password,
       password,
+      user.password,
     );
 
-    if (passwordMatched) {
+    if (!passwordMatched) {
       return new LoginUserError();
     }
 
     const session = await this.sessionRepository.create({ user_id: user.id });
-    console.log('session', session);
+
     return {
       token: generateToken(session.id),
       user: {

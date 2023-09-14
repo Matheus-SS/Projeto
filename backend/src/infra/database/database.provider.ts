@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
 import TypeOrmDatabase from './typeormDatabase';
-import { DATABASE_TYPEORM } from '@src/constants';
+import { DATABASE } from '@src/constants';
 
 export const DatabaseProvider: Provider = {
-  provide: DATABASE_TYPEORM,
+  provide: DATABASE,
   useClass: TypeOrmDatabase,
 };

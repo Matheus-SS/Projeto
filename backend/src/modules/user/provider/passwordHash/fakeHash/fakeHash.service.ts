@@ -2,7 +2,7 @@ import { InterfacePasswordHash } from '../passwordHash.interface';
 
 export class FakeHashPassword implements InterfacePasswordHash {
   async generateHash(password: string): Promise<string> {
-    return password
+    return password;
   }
   async comparePassword(
     password: string,

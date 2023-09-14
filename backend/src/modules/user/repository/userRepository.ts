@@ -3,14 +3,14 @@ import {
   IUser,
   IUserRepository,
 } from '@modules/user/repository/userRepository.interface';
-import { DATABASE_TYPEORM } from '@src/constants';
+import { DATABASE } from '@src/constants';
 import { User } from '@infra/database/entity/User.entity';
 import TypeOrmDatabase from '@infra/database/typeormDatabase';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
   constructor(
-    @Inject(DATABASE_TYPEORM)
+    @Inject(DATABASE)
     private database: TypeOrmDatabase,
   ) {}
 
@@ -18,9 +18,10 @@ export class UserRepository implements IUserRepository {
     return this.database.connection.getRepository(User);
   }
 
-  public async create(data: Omit<IUser, 'id'>): Promise<void> {
+  public async create(data: Omit<IUser, 'id'>): Promise<number> {
     const user = this.user.create(data);
-    await this.user.insert(user);
+    const result = await this.user.insert(user);
+    return result.identifiers[0].id;
   }
 
   public async findByEmail(email: string): Promise<IUser> {

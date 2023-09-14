@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DATABASE_TYPEORM } from '@src/constants';
+import { DATABASE } from '@src/constants';
 import TypeOrmDatabase from '@infra/database/typeormDatabase';
 import {
   ISession,
@@ -11,7 +11,7 @@ import { randomUUID } from 'crypto';
 @Injectable()
 export class SessionRepository implements ISessionRepository {
   constructor(
-    @Inject(DATABASE_TYPEORM)
+    @Inject(DATABASE)
     private database: TypeOrmDatabase,
   ) {}
 

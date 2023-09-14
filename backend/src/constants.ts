@@ -1,4 +1,4 @@
-export const DATABASE_TYPEORM = 'DATABASE_TYPEORM';
+export const DATABASE = 'DATABASE';
 
 export const SALT_ROUNDS = 10;
 export const PASSWORD_HASH_PROVIDER = 'PASSWORD_HASH_PROVIDER';

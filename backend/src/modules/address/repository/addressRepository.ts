@@ -1,6 +1,6 @@
 import TypeOrmDatabase from '@infra/database/typeormDatabase';
 import { Inject, Injectable } from '@nestjs/common';
-import { DATABASE_TYPEORM } from '@src/constants';
+import { DATABASE } from '@src/constants';
 import {
   CreateAddress,
   IAddressRepository,
@@ -10,7 +10,7 @@ import { Address } from '@infra/database/entity/Address.entity';
 @Injectable()
 export class AddressRepository implements IAddressRepository {
   constructor(
-    @Inject(DATABASE_TYPEORM)
+    @Inject(DATABASE)
     private database: TypeOrmDatabase,
   ) {}
 

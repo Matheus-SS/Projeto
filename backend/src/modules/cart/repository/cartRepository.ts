@@ -1,6 +1,6 @@
 import TypeOrmDatabase from '@infra/database/typeormDatabase';
 import { Inject, Injectable } from '@nestjs/common';
-import { DATABASE_TYPEORM } from '@src/constants';
+import { DATABASE } from '@src/constants';
 import {
   CartFilter,
   CreateCart,
@@ -14,7 +14,7 @@ import { Cart } from '@infra/database/entity/Cart.entity';
 @Injectable()
 export class CartRepository implements ICartRepository {
   constructor(
-    @Inject(DATABASE_TYPEORM)
+    @Inject(DATABASE)
     private database: TypeOrmDatabase,
   ) {}
 

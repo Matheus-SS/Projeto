@@ -12,6 +12,7 @@ export class Session extends BaseEntity {
   @Column({
     nullable: false,
     name: 'created_at',
+    default: () => `datetime('now','localtime')`, // para sqlite gerar data automaticamente
   })
   created_at: Date;
 }

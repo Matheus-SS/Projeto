@@ -1,11 +1,11 @@
-import { DATABASE_TYPEORM } from '@src/constants';
+import { DATABASE } from '@src/constants';
 import { Inject, Injectable } from '@nestjs/common';
 import TypeOrmDatabase from '@infra/database/typeormDatabase';
 import { Log } from '@infra/database/entity/Log.entity';
 @Injectable()
 export class LogRepository {
   constructor(
-    @Inject(DATABASE_TYPEORM)
+    @Inject(DATABASE)
     private database: TypeOrmDatabase,
   ) {}
   private get log() {

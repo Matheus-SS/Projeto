@@ -1,7 +1,7 @@
 import { Product } from '@infra/database/entity/Product.entity';
 import TypeOrmDatabase from '@infra/database/typeormDatabase';
 import { Inject, Injectable } from '@nestjs/common';
-import { DATABASE_TYPEORM } from '@src/constants';
+import { DATABASE } from '@src/constants';
 import { randomUUID } from 'crypto';
 import {
   CreateProduct,
@@ -12,7 +12,7 @@ import {
 @Injectable()
 export class ProductRepository implements IProductRepository {
   constructor(
-    @Inject(DATABASE_TYPEORM)
+    @Inject(DATABASE)
     private database: TypeOrmDatabase,
   ) {}
 
