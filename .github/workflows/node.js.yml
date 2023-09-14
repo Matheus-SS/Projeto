@@ -12,18 +12,21 @@ on:
 
 jobs:
   build:
+    name: TEST
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
+    
+    - name: Set Node.js 16.16.0
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm test
+        node-version: 16.16.0
+    - name: Run install
+    - uses: borales/actions-yarn@v4
+    - with:
+        cmd: install # will run `yarn install` command
+    - name: Test the app
+    - uses: borales/actions-yarn@v4
+    - with:
+          cmd: test # will run `yarn test` command
+    
