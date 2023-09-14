@@ -159,7 +159,7 @@ export class CreateAddressUseCase {
       city,
       uf,
     });
-    console.log(results);
+
     if (results.success === false) {
       const { issues } = results.error;
       return {
