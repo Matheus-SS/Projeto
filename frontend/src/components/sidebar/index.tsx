@@ -110,7 +110,7 @@ export const Sidebar: React.FC = () => {
     mutation.mutate();
   };
 
-  const { setCart, setIsOpen, isOpen, getMyCartQuery } = useCart();
+  const { setIsOpen, isOpen, getMyCartQuery } = useCart();
 
   function openCart() {
     setIsOpen(!isOpen);

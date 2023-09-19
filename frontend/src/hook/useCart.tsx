@@ -52,6 +52,7 @@ export function CartProvider({ children }: PropsWithChildren) {
     queryKey: ['getMyCart'],
     queryFn: getMyCart,
     refetchOnWindowFocus: false,
+    enabled: false,
     onSuccess: (data: CartResponse[]) => {
       const dataCart = data.map((d) => ({
         id: d.product_id,
