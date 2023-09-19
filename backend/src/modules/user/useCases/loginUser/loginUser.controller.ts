@@ -10,6 +10,7 @@ import { BaseController } from '@shared/baseController';
 import { ValidationInputError } from '@shared/validationError';
 import { LoginUserDTO, LoginUserResponse } from './loginUserTypes';
 import { LoginUserError } from './loginUserError';
+import { config } from '@shared/config';
 
 @Controller(USER_ROUTE)
 export class LoginUserController extends BaseController {
@@ -43,7 +44,10 @@ export class LoginUserController extends BaseController {
       response.cookie('token', result.token, {
         httpOnly: true,
         maxAge: EXPIRES_IN_COOKIE,
-        domain: 'localhost',
+        domain: config.DOMAIN_COOKIE,
+        path: '/',
+        secure: Boolean(config.SECURE_COOKIE),
+        sameSite: Boolean(config.SAME_SITE_COOKIE),
       });
       return this.ok(response, result);
     } catch (error: any) {

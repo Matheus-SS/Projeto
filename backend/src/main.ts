@@ -1,15 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { InputInterceptor } from '@shared/interceptors/input.interceptor';
-import { contract } from './contract';
-import { generateOpenApi } from '@ts-rest/open-api';
+import { config } from '@shared/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
       credentials: true,
-      origin: 'http://localhost:8080',
+      origin: config.CORS_ORIGIN,
     },
   });
 

@@ -1,4 +1,3 @@
-import { TsRestHandler, tsRestHandler } from '@ts-rest/nest';
 import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
 import { CREATE_USER_USE_CASE_PROVIDER, USER_ROUTE } from '@src/constants';
 import { InterfaceUseCase } from '@shared/useCase.interface';

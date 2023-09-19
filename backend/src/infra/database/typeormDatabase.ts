@@ -7,6 +7,7 @@ import { Product } from './entity/Product.entity';
 import { Cart } from './entity/Cart.entity';
 import { Log } from './entity/Log.entity';
 import { Address } from './entity/Address.entity';
+import { config } from '@shared/config';
 
 @Injectable()
 export default class TypeOrmDatabase {
@@ -18,11 +19,11 @@ export default class TypeOrmDatabase {
   public init(): void {
     this.connection = new DataSource({
       type: 'postgres',
-      host: 'silly.db.elephantsql.com',
+      host: config.DATABASE_HOST,
       port: 5432,
-      username: 'rdayqmiv',
-      password: 'L7GABvzWbfSKA-Wlw2X6rcox1k5lJUf2',
-      database: 'rdayqmiv',
+      username: config.DATABASE_USERNAME,
+      password: config.DATABASE_PASSWORD,
+      database: config.DATABASE,
       logging: true,
       entities: [User, Session, Product, Cart, Log, Address],
       namingStrategy: new SnakeNamingStrategy(),
