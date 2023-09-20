@@ -13,7 +13,20 @@ export const scriptSql = {
      created_at DATE DEFAULT (datetime('now','localtime')),
      FOREIGN KEY (user_id) REFERENCES tbl_user (id)
     );`,
-
-  DELETE_TABLE_USER: `DELETE FROM tbl_user`,
-  DELETE_TABLE_SESSION: `DELETE FROM tbl_session`,
+  CREATE_TABLE_ADDRESS: `CREATE TABLE IF NOT EXISTS tbl_address(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    cep TEXT NOT NULL,
+    public_place TEXT,
+    complement TEXT,
+    neighborhood TEXT NOT NULL,
+    city TEXT NOT NULL,
+    uf CHAR(2) NOT NULL,
+    created_at DATE DEFAULT (datetime('now','localtime')),
+    updated_at DATE DEFAULT (datetime('now','localtime')),
+    FOREIGN KEY (user_id) REFERENCES tbl_user(id)
+  );`,
+  DELETE_TABLE_ADDRESS: `DROP TABLE tbl_address`,
+  DELETE_TABLE_USER: `DROP TABLE tbl_user`,
+  DELETE_TABLE_SESSION: `DROP TABLE tbl_session`,
 };

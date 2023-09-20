@@ -45,6 +45,7 @@ export class AddressController extends BaseController {
         return this.created(response, result.data);
       }
     } catch (error: any) {
+      console.error('CreateAddress', error);
       return this.internalError(response, error);
     }
   }

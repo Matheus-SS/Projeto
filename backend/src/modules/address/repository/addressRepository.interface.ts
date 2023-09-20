@@ -11,8 +11,16 @@ export interface IAddress {
   updated_at?: Date;
 }
 
-export type CreateAddress = Omit<IAddress, 'id' | 'created_at' | 'updated_at'>;
+type User = {
+  user_username: string;
+  user_email: string;
+  user_created_at: Date;
+  user_updated_at?: Date;
+};
 
+export type CreateAddress = Omit<IAddress, 'id' | 'created_at' | 'updated_at'>;
+export type IAddressAll = IAddress & User;
 export interface IAddressRepository {
-  create(data: CreateAddress): Promise<void>;
+  create(data: CreateAddress): Promise<number>;
+  findById(id: number): Promise<IAddressAll[]>;
 }

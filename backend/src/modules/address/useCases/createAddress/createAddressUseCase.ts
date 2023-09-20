@@ -9,6 +9,23 @@ import {
   IAddressRepository,
 } from '../../repository/addressRepository.interface';
 
+type CreateAddressResponse = {
+  id: number;
+  user_id: number;
+  cep: string;
+  public_place?: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  uf: string;
+  created_at: Date;
+  updated_at?: Date;
+  user_username: string;
+  user_email: string;
+  user_created_at: Date;
+  user_updated_at?: Date;
+};
+
 const listUF = [
   'AC',
   'AL',
@@ -54,7 +71,9 @@ export class CreateAddressUseCase {
     user_id,
     complement,
     public_place,
-  }: CreateAddress): Promise<ReturnType<ValidationInputError, void>> {
+  }: CreateAddress): Promise<
+    ReturnType<ValidationInputError, CreateAddressResponse>
+  > {
     const isValidInput = this.validateInput({
       cep,
       city,
@@ -72,7 +91,7 @@ export class CreateAddressUseCase {
       };
     }
 
-    await this.addressRepository.create({
+    const id = await this.addressRepository.create({
       cep,
       city,
       neighborhood,
@@ -81,7 +100,10 @@ export class CreateAddressUseCase {
       complement,
       public_place,
     });
-    return { data: null, success: true };
+
+    const address = await this.addressRepository.findById(id);
+
+    return { data: address[0], success: true };
   }
 
   public validateInput({

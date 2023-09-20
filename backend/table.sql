@@ -58,6 +58,6 @@ create table tbl_address(
 	city varchar not null,
 	uf varchar(2) not null,
 	created_at timestamptz not null default now(),
-	updated_at timestamptz default now(),
+	updated_at timestamptz now(),
 	foreign key (user_id) references tbl_user(id)
 );

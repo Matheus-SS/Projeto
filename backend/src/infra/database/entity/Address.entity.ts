@@ -42,6 +42,7 @@ export class Address extends BaseEntity {
 
   @Column({
     nullable: false,
+    default: () => `datetime('now','localtime')`,
   })
   created_at: Date;
 
