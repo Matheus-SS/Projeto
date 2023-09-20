@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   CreateAddress,
+  IAddressAll,
   IAddressRepository,
 } from '../../repository/addressRepository.interface';
 import { CreateAddressUseCase } from './createAddressUseCase';
 
 class FakeAddressRepository implements IAddressRepository {
-  create(data: CreateAddress): Promise<void> {
+  findById(id: number): Promise<IAddressAll[]> {
+    throw new Error('Method not implemented.');
+  }
+  create(data: CreateAddress): Promise<number> {
     throw new Error('Method not implemented.');
   }
 }

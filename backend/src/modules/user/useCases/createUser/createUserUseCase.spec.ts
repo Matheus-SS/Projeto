@@ -29,7 +29,7 @@ describe('Create User Use Case', () => {
     await sleep();
   });
   afterAll(() => {
-    sqliteConfig.executeScript('DELETE FROM tbl_user');
+    sqliteConfig.executeScript(scriptSql.DELETE_TABLE_USER);
   });
   it('Deve criar usuário ', async () => {
     const user = await createUserUsecase.execute({
