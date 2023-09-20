@@ -1,4 +1,5 @@
-const os = require('os');
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/ban-types */
 const cluster = require('cluster');
 import { Injectable } from '@nestjs/common';
 const numberOfCpus = 4;
@@ -13,7 +14,7 @@ export class ClusterService {
       for (let index = 0; index < numberOfCpus; index++) {
         cluster.fork();
       }
-      cluster.on('exit', (worker, code, signal) => {
+      cluster.on('exit', (worker, code) => {
         if (code !== 0 && !worker.exitedAfterDisconnect) {
           console.log(`Worker ${worker.process.pid} died. Restarting`);
           cluster.fork();

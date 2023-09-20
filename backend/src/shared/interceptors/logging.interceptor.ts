@@ -7,7 +7,6 @@ import {
   Inject,
 } from '@nestjs/common';
 import { LOG_REPOSITORY_PROVIDER } from '@src/constants';
-import { Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
