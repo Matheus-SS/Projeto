@@ -1,4 +1,4 @@
-import { Controller, Inject, Res, Get, Post, Req } from '@nestjs/common';
+import { Controller, Inject, Res, Get, Req } from '@nestjs/common';
 
 import { Request, Response } from 'express';
 import { BaseController } from '@shared/baseController';
