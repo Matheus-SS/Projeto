@@ -1,0 +1,17 @@
+filebeat.inputs:
+  - type: log
+    id: projeto-backend
+    enabled: true
+    paths:
+      - /var/log/app_logs/*.log
+    json.keys_under_root: true
+    processors:
+      - decode_json_fields:
+          fields: ['message']
+          target: 'json'
+      - drop_fields:
+          fields: ['message']
+output.elasticsearch:
+  hosts: elasticsearch:9200
+  username: elastic
+  password: elastic

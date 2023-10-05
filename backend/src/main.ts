@@ -10,7 +10,6 @@ async function bootstrap() {
       origin: config.CORS_ORIGIN,
     },
   });
-
   app.use(helmet());
   app.useGlobalInterceptors(new InputInterceptor());
 
