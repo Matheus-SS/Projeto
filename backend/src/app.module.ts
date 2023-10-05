@@ -8,7 +8,7 @@ import { UserModule } from './modules/user/useCases/user.module';
 import { SessionModule } from '@modules/session/session.module';
 import { ProductModule } from '@modules/product/product.module';
 import { CartModule } from '@modules/cart/cart.module';
-import { LoggingInterceptor } from '@shared/interceptors/logging.interceptor';
+import { DatabaseLoggerMiddleware } from '@shared/middleware/databaseLogger.middeware';
 import { LogRepositoryModule } from '@infra/repository/log/logRepository.module';
 import { AddressModule } from '@modules/address/Address.module';
 
@@ -22,16 +22,12 @@ import { AddressModule } from '@modules/address/Address.module';
     AddressModule,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: 'APP_INTERCEPTOR',
-      useClass: LoggingInterceptor,
-    },
-  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
+      .apply(DatabaseLoggerMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL })
       .apply(AuthMiddleware)
       .exclude(
         {

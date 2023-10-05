@@ -1,16 +1,41 @@
 version: '3'
+
 services:
-  redis:
-    container_name: redis
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-  redis-commander:
-    container_name: redis-commander
-    hostname: redis-commander
-    image: ghcr.io/joeferner/redis-commander:latest
-    restart: always
+  elasticsearch:
+    image: elastic/elasticsearch:8.10.2
+    container_name: elasticsearch
     environment:
-      - REDIS_HOSTS=local:redis:6379
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_HEAP_SIZE=1024m"
+      - "discovery.type=single-node"
+      - "ES_PROTOCOL=http"
+      - "xpack.security.enabled=false"
+    volumes:
+      - ./elasticsearch_data:/usr/share/elasticsearch/data
     ports:
-      - "8081:8081"
+      - 9200:9200
+      - 9300:9300
+  kibana:
+    image: kibana:8.10.2
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS="http://elasticsearch:9200"
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY="MVE6Y9s8s0wuWokhCgeyHyqYA19FajbA"
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+  filebeat:
+    image: elastic/filebeat:8.10.2
+    container_name: filebeat
+    command: filebeat -e -strict.perms=false
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./logs.log:/var/log/app_logs/logs.log
+    depends_on:
+      - kibana
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic
