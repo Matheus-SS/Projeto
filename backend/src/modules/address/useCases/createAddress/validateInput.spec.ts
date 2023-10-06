@@ -7,6 +7,12 @@ import {
 import { CreateAddressUseCase } from './createAddressUseCase';
 
 class FakeAddressRepository implements IAddressRepository {
+  findByUserId(user_id: number): Promise<IAddressAll[]> {
+    throw new Error('Method not implemented.');
+  }
+  delete(id: number, user_id: number): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   findById(id: number): Promise<IAddressAll[]> {
     throw new Error('Method not implemented.');
   }

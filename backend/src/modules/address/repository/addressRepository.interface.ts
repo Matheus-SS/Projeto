@@ -23,4 +23,6 @@ export type IAddressAll = IAddress & User;
 export interface IAddressRepository {
   create(data: CreateAddress): Promise<number>;
   findById(id: number): Promise<IAddressAll[]>;
+  findByUserId(user_id: number): Promise<IAddressAll[]>;
+  delete(id: number, user_id: number): Promise<void>;
 }

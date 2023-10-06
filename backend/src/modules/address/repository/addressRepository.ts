@@ -57,9 +57,42 @@ export class AddressRepository implements IAddressRepository {
       on
         A.user_id = B.id
       where
-        A.id = :id;
+        A.id = $1;
     `,
-      [{ id: id }],
+      [id],
     );
+  }
+
+  public async findByUserId(user_id: number): Promise<IAddressAll[]> {
+    return await this.address.query(
+      `
+      select
+        A.id,
+        A.user_id,
+        A.cep,
+        A.public_place,
+        A.complement,
+        A.neighborhood,
+        A.city,
+        A.uf,
+        A.created_at,
+        A.updated_at,
+        B.username as user_username,
+        B.email as user_email,
+        B.created_at as user_created_at,
+        B.updated_at as user_updated_at
+      from
+        tbl_address A
+      join tbl_user B 
+      on
+        A.user_id = B.id
+      where
+        A.user_id = $1;
+    `,
+      [user_id],
+    );
+  }
+  public async delete(id: number, user_id: number): Promise<void> {
+    await this.address.delete({ id: id, user_id: user_id });
   }
 }
